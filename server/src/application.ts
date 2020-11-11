@@ -1,16 +1,28 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, createBindingFromClass} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
+import {OpenApiSpec, RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-
-export {ApplicationConfig};
+import {
+  AuthenticationComponent,
+  registerAuthenticationStrategy,
+} from '@loopback/authentication';
+import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  TokenServiceConstants,
+  UserServiceBindings,
+} from './keys';
+import {BCryptHasher, JWTService, MyUserService} from './services';
+import {SECURITY_SCHEME_SPEC, SECURITY_SPEC} from './utils/security-spec';
+import {AuthorizationComponent} from '@loopback/authorization';
 
 export class ServerApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -30,6 +42,12 @@ export class ServerApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
 
+    this.component(AuthenticationComponent);
+    this.component(AuthorizationComponent);
+
+    this.add(createBindingFromClass(JWTAuthenticationStrategy));
+    registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
+
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
@@ -40,5 +58,38 @@ export class ServerApplication extends BootMixin(
         nested: true,
       },
     };
+
+    this.setUpBindings();
+
+    const spec: OpenApiSpec = {
+      openapi: '3.0.0',
+      info: {title: 'pkg.name', version: 'pkg.version'},
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      servers: [{url: '/api'}],
+      security: SECURITY_SPEC,
+    };
+    this.api(spec);
+  }
+
+  private setUpBindings(): void {
+    // Bind package.json to the application context
+    // this.bind(PackageKey).to(pkg);
+
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(
+      TokenServiceConstants.TOKEN_SECRET_VALUE,
+    );
+
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
+      TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
+    );
+
+    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+
+    // // Bind bcrypt hash services
+    this.bind(PasswordHasherBindings.ROUNDS).to(10);
+    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BCryptHasher);
+
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
   }
 }

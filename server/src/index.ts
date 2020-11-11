@@ -1,4 +1,5 @@
-import {ApplicationConfig, ServerApplication} from './application';
+import {ServerApplication} from './application';
+import {ApplicationConfig} from '@loopback/core';
 
 export * from './application';
 
