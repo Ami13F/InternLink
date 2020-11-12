@@ -1,7 +1,7 @@
 import {model, property, repository} from '@loopback/repository';
 import {PasswordHasher, validateCredentials} from '../services';
 import {get, HttpErrors, param, post, requestBody} from '@loopback/rest';
-import {User} from '../models';
+import {User, UserType} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {inject} from '@loopback/core';
 import {
@@ -44,25 +44,11 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {}
 
-  @post('/users/sign-up', {
-    responses: {
-      '200': {
-        description: 'User',
-        content: {
-          'application/json': {
-            schema: {
-              'x-ts-type': User,
-            },
-          },
-        },
-      },
-    },
-  })
-  async create(
-    @requestBody(CredentialsRequestBody)
+  private async createUser(
     newUserRequest: Credentials,
+    userRole: string,
   ): Promise<User> {
-    newUserRequest.role = 'user';
+    newUserRequest.role = userRole;
 
     // ensure a valid email value and password value
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
@@ -85,8 +71,8 @@ export class UserController {
 
       return savedUser;
     } catch (error) {
-      // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      // MySQL error 1022 - duplicate key
+      if (error.code === 1022 && error.errmsg.includes(`table: 'user'`)) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -112,36 +98,49 @@ export class UserController {
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
   ): Promise<User> {
-    // All new users have the "customer" role by default
-    newUserRequest.role = 'admin';
-    // ensure a valid email value and password value
-    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
+    return this.createUser(newUserRequest, UserType.Admin);
+  }
 
-    // encrypt the password
-    const password = await this.passwordHasher.hashPassword(
-      newUserRequest.password,
-    );
+  @post('/users/sign-up/company', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
+  async createCompany(
+    @requestBody(CredentialsRequestBody)
+    newUserRequest: Credentials,
+  ): Promise<User> {
+    return this.createUser(newUserRequest, UserType.Company);
+  }
 
-    try {
-      // create the new user
-      const savedUser = await this.userRepository.create(
-        _.omit(newUserRequest, 'password'),
-      );
-
-      // set the password
-      await this.userRepository
-        .userCredentials(savedUser.id)
-        .create({password});
-
-      return savedUser;
-    } catch (error) {
-      // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
-        throw new HttpErrors.Conflict('Email value is already taken');
-      } else {
-        throw error;
-      }
-    }
+  @post('/users/sign-up/student', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
+  async createStudent(
+    @requestBody(CredentialsRequestBody)
+    newUserRequest: Credentials,
+  ): Promise<User> {
+    return this.createUser(newUserRequest, UserType.Student);
   }
 
   @get('/users/{userId}', {
@@ -160,7 +159,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin'],
+    allowedRoles: [UserType.Admin],
     voters: [basicAuthorization],
   })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
