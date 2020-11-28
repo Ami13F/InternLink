@@ -18,10 +18,7 @@ import {basicAuthorization} from '../middlewares/auth.middle';
 import {User, UserResponse, UserType} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher, validateCredentials} from '../services';
-import {
-  CredentialsRequestBody,
-  UserProfileSchema,
-} from './specs/user-controller.specs';
+import {CredentialsRequestBody} from './specs/user-controller.specs';
 
 export class UserController {
   constructor(
@@ -126,14 +123,16 @@ export class UserController {
         description: 'The current user profile',
         content: {
           'application/json': {
-            schema: UserProfileSchema,
+            schema: {
+              'x-ts-type': User,
+            },
           },
         },
       },
     },
   })
   @authenticate('jwt')
-  async printCurrentUser(
+  async getCurrentUser(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
   ): Promise<User> {
@@ -148,12 +147,7 @@ export class UserController {
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              properties: {
-                token: {
-                  type: 'string',
-                },
-              },
+              'x-ts-type': UserResponse,
             },
           },
         },
