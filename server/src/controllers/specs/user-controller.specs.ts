@@ -1,3 +1,5 @@
+import {SchemaObject} from '@loopback/rest';
+
 export const UserProfileSchema = {
   type: 'object',
   required: ['id'],
@@ -8,7 +10,7 @@ export const UserProfileSchema = {
   },
 };
 
-const CredentialsSchema = {
+const CredentialsSchema: SchemaObject = {
   type: 'object',
   required: ['email', 'password'],
   properties: {

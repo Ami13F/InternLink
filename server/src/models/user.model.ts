@@ -1,5 +1,6 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, hasOne, model, property} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
+import {UserType} from './user-type.model';
 
 @model({
   settings: {
@@ -34,6 +35,9 @@ export class User extends Entity {
   @property({
     type: 'string',
     required: true,
+    jsonSchema: {
+      enum: Object.values(UserType),
+    },
   })
   role: string;
 

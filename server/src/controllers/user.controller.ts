@@ -1,37 +1,27 @@
-import {model, property, repository} from '@loopback/repository';
-import {PasswordHasher, validateCredentials} from '../services';
-import {get, HttpErrors, param, post, requestBody} from '@loopback/rest';
-import {User, UserType} from '../models';
-import {Credentials, UserRepository} from '../repositories';
-import {inject} from '@loopback/core';
 import {
   authenticate,
   TokenService,
   UserService,
 } from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
+import {inject} from '@loopback/core';
+import {repository} from '@loopback/repository';
+import {get, HttpErrors, param, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
-import {
-  CredentialsRequestBody,
-  UserProfileSchema,
-} from './specs/user-controller.specs';
-
+import _ from 'lodash';
 import {
   PasswordHasherBindings,
   TokenServiceBindings,
   UserServiceBindings,
 } from '../keys';
-import _ from 'lodash';
 import {basicAuthorization} from '../middlewares/auth.middle';
-
-@model()
-export class NewUserRequest extends User {
-  @property({
-    type: 'string',
-    required: true,
-  })
-  password: string;
-}
+import {User, UserResponse, UserType} from '../models';
+import {Credentials, UserRepository} from '../repositories';
+import {PasswordHasher, validateCredentials} from '../services';
+import {
+  CredentialsRequestBody,
+  UserProfileSchema,
+} from './specs/user-controller.specs';
 
 export class UserController {
   constructor(
@@ -44,50 +34,14 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {}
 
-  private async createUser(
-    newUserRequest: Credentials,
-    userRole: string,
-  ): Promise<User> {
-    newUserRequest.role = userRole;
-
-    // ensure a valid email value and password value
-    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
-
-    // encrypt the password
-    const password = await this.passwordHasher.hashPassword(
-      newUserRequest.password,
-    );
-
-    try {
-      // create the new user
-      const savedUser = await this.userRepository.create(
-        _.omit(newUserRequest, 'password'),
-      );
-
-      // set the password
-      await this.userRepository
-        .userCredentials(savedUser.id)
-        .create({password});
-
-      return savedUser;
-    } catch (error) {
-      // MySQL error 1022 - duplicate key
-      if (error.code === 1022 && error.errmsg.includes(`table: 'user'`)) {
-        throw new HttpErrors.Conflict('Email value is already taken');
-      } else {
-        throw error;
-      }
-    }
-  }
-
   @post('/users/sign-up/admin', {
     responses: {
       '200': {
-        description: 'User',
+        description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': User,
+              'x-ts-type': UserResponse,
             },
           },
         },
@@ -97,18 +51,18 @@ export class UserController {
   async createAdmin(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<User> {
+  ): Promise<UserResponse> {
     return this.createUser(newUserRequest, UserType.Admin);
   }
 
   @post('/users/sign-up/company', {
     responses: {
       '200': {
-        description: 'User',
+        description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': User,
+              'x-ts-type': UserResponse,
             },
           },
         },
@@ -118,18 +72,18 @@ export class UserController {
   async createCompany(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<User> {
+  ): Promise<UserResponse> {
     return this.createUser(newUserRequest, UserType.Company);
   }
 
   @post('/users/sign-up/student', {
     responses: {
       '200': {
-        description: 'User',
+        description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': User,
+              'x-ts-type': UserResponse,
             },
           },
         },
@@ -139,7 +93,7 @@ export class UserController {
   async createStudent(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<User> {
+  ): Promise<UserResponse> {
     return this.createUser(newUserRequest, UserType.Student);
   }
 
@@ -208,7 +162,11 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<{token: string}> {
+  ): Promise<UserResponse> {
+    return this.loginUser(credentials);
+  }
+
+  private async loginUser(credentials: Credentials): Promise<UserResponse> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
 
@@ -218,6 +176,43 @@ export class UserController {
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
 
-    return {token};
+    return new UserResponse({id: user.id, token: token});
+  }
+
+  private async createUser(
+    newUserRequest: Credentials,
+    userRole: UserType,
+  ): Promise<UserResponse> {
+    newUserRequest.role = userRole.toString();
+
+    // ensure a valid email value and password value
+    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
+
+    // encrypt the password
+    const password = await this.passwordHasher.hashPassword(
+      newUserRequest.password,
+    );
+
+    try {
+      // create the new user
+      const savedUser = await this.userRepository.create(
+        _.omit(newUserRequest, 'password'),
+      );
+
+      // set the password
+      await this.userRepository
+        .userCredentials(savedUser.id)
+        .create({password});
+
+      // login the user
+      return await this.loginUser(newUserRequest);
+    } catch (error) {
+      // MySQL error 1022 - duplicate key
+      if (error.code === 1022 && error.errmsg.includes(`table: 'user'`)) {
+        throw new HttpErrors.Conflict('Email value is already taken');
+      } else {
+        throw error;
+      }
+    }
   }
 }
