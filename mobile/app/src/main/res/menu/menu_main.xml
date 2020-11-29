@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/leaderboard_fragment"
+        android:icon="@drawable/baseline_emoji_events_white_18dp"
+        android:title="Leaderbord"
+        android:tooltipText="Leaderboard" />
+
+    <item
+        android:id="@+id/profile_fragment"
+        android:icon="@drawable/baseline_person_white_18dp"
+        android:title="Profile"
+        android:tooltipText="Profile" />
+
+    <item
+        android:id="@+id/camera_fragment"
+        android:icon="@drawable/baseline_photo_camera_white_18dp"
+        android:title="Camera"
+        android:tooltipText="Camera" />
+
+</menu>

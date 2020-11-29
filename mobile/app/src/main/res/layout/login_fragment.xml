@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:backgroundTintMode="src_over"
+    android:orientation="vertical"
+    tools:context=".auth.login.LoginFragment">
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="#3B0C5C77"
+        android:hint="@string/username"
+        android:text="admin@gmail.com"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="#3B0C5C77"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:text="123456"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="#00BCD4"
+        android:enabled="false"
+        android:shadowColor="#B04156F1"
+        android:text="@string/sign_in"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#27958E8E">
+
+        <TextView
+            android:id="@+id/createText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create account"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+        <Button
+            android:id="@+id/createStudentAccountBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/ring_btn"
+            android:filterTouchesWhenObscured="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:foreground="@drawable/baseline_person_white_18dp"
+            app:layout_constraintEnd_toStartOf="@+id/createCompanyAccountBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/createText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student"
+            app:layout_constraintEnd_toEndOf="@+id/createStudentAccountBtn"
+            app:layout_constraintStart_toStartOf="@+id/createStudentAccountBtn"
+            app:layout_constraintTop_toBottomOf="@+id/createStudentAccountBtn" />
+
+        <Button
+            android:id="@+id/createCompanyAccountBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/ring_btn"
+            android:filterTouchesWhenObscured="false"
+            android:foreground="@drawable/ic_baseline_business_center_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/createStudentAccountBtn"
+            app:layout_constraintTop_toBottomOf="@id/createText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Company"
+            app:layout_constraintEnd_toEndOf="@+id/createCompanyAccountBtn"
+            app:layout_constraintStart_toStartOf="@+id/createCompanyAccountBtn"
+            app:layout_constraintTop_toBottomOf="@+id/createCompanyAccountBtn" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
