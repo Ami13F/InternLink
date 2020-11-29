@@ -15,7 +15,7 @@ import {
   UserServiceBindings,
 } from '../keys';
 import {basicAuthorization} from '../middlewares/auth.middle';
-import {User, UserResponse, UserType} from '../models';
+import {User, UserAuthorization, UserType} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher, validateCredentials} from '../services';
 import {CredentialsRequestBody} from './specs/user-controller.specs';
@@ -31,14 +31,14 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {}
 
-  @post('/users/sign-up/admin', {
+  @post('/admin/sign-up', {
     responses: {
       '200': {
         description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': UserResponse,
+              'x-ts-type': UserAuthorization,
             },
           },
         },
@@ -48,18 +48,18 @@ export class UserController {
   async createAdmin(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<UserResponse> {
+  ): Promise<UserAuthorization> {
     return this.createUser(newUserRequest, UserType.Admin);
   }
 
-  @post('/users/sign-up/company', {
+  @post('/company/sign-up', {
     responses: {
       '200': {
         description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': UserResponse,
+              'x-ts-type': UserAuthorization,
             },
           },
         },
@@ -69,18 +69,18 @@ export class UserController {
   async createCompany(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<UserResponse> {
+  ): Promise<UserAuthorization> {
     return this.createUser(newUserRequest, UserType.Company);
   }
 
-  @post('/users/sign-up/student', {
+  @post('/student/sign-up', {
     responses: {
       '200': {
         description: 'User response',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': UserResponse,
+              'x-ts-type': UserAuthorization,
             },
           },
         },
@@ -90,7 +90,7 @@ export class UserController {
   async createStudent(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
-  ): Promise<UserResponse> {
+  ): Promise<UserAuthorization> {
     return this.createUser(newUserRequest, UserType.Student);
   }
 
@@ -147,7 +147,7 @@ export class UserController {
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': UserResponse,
+              'x-ts-type': UserAuthorization,
             },
           },
         },
@@ -156,11 +156,13 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<UserResponse> {
+  ): Promise<UserAuthorization> {
     return this.loginUser(credentials);
   }
 
-  private async loginUser(credentials: Credentials): Promise<UserResponse> {
+  private async loginUser(
+    credentials: Credentials,
+  ): Promise<UserAuthorization> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
 
@@ -170,13 +172,17 @@ export class UserController {
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
 
-    return new UserResponse({id: user.id, token: token});
+    return new UserAuthorization({
+      id: user.id,
+      token: token,
+      role: user.role,
+    });
   }
 
   private async createUser(
     newUserRequest: Credentials,
     userRole: UserType,
-  ): Promise<UserResponse> {
+  ): Promise<UserAuthorization> {
     newUserRequest.role = userRole.toString();
 
     // ensure a valid email value and password value

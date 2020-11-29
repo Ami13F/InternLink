@@ -1,8 +1,8 @@
 import {Entity, hasOne, model, property} from '@loopback/repository';
+import {Company} from './company.model';
+import {Student} from './student.model';
 import {UserCredentials} from './user-credentials.model';
 import {UserType} from './user-type.model';
-import {Student} from './student.model';
-import {Company} from './company.model';
 
 @model({
   settings: {
