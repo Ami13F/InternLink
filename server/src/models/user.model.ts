@@ -1,6 +1,8 @@
 import {Entity, hasOne, model, property} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
 import {UserType} from './user-type.model';
+import {Student} from './student.model';
+import {Company} from './company.model';
 
 @model({
   settings: {
@@ -43,6 +45,12 @@ export class User extends Entity {
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
+
+  @hasOne(() => Student, {keyTo: 'id'})
+  student: Student;
+
+  @hasOne(() => Company, {keyTo: 'id'})
+  company: Company;
 
   constructor(data?: Partial<User>) {
     super(data);

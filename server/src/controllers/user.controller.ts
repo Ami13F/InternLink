@@ -201,8 +201,8 @@ export class UserController {
       // login the user
       return await this.loginUser(newUserRequest);
     } catch (error) {
-      // MySQL error 1022 - duplicate key
-      if (error.code === 1022 && error.errmsg.includes(`table: 'user'`)) {
+      // MySQL error 1062 - duplicate key
+      if (error.errno === 1062 && error.code === `ER_DUP_ENTRY`) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
