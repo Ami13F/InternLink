@@ -24,8 +24,8 @@ interface ItemDao {
 //            JOIN User on User.id=Player.idPlayer where Player.country=:country order by Player.score DESC""")
 //    fun getSortedByCountry(country: String): LiveData<List<BoardItem>>
 
-    @Query("SELECT * FROM Company WHERE id=:id ")
-    fun findPlayer(id: Int): LiveData<Company>
+    @Query("SELECT * FROM Company WHERE name=:name ")
+    fun findPlayer(name: String): LiveData<Company>
 
 
     @Query("SELECT * FROM User WHERE email=:id ") //TODO: repair id
@@ -43,10 +43,10 @@ interface ItemDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(item: Company)
 
-    @Query("DELETE FROM Company where id=:id")
-    suspend fun deleteOne(id: String)
+    @Query("DELETE FROM Company where name=:name")
+    suspend fun deleteOne(name: String)
 
-    @Query("DELETE FROM Company where id!=\"\"")
+    @Query("DELETE FROM Company where name!=\"\"")
     suspend fun deleteAllPlayers()
 
     @Query("DELETE FROM User where email != \"\" ")

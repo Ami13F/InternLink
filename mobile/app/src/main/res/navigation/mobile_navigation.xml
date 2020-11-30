@@ -24,7 +24,7 @@
         tools:layout="@layout/profile_fragment" />
 
     <fragment
-        android:id="@+id/create_account_fragment"
+        android:id="@+id/create_student_account_fragment"
         android:name="com.kotlinapp.auth.account.CreateStudentAccountFragment"
         android:label="@string/item_edit"
         tools:layout="@layout/create_student_account_fragment" />

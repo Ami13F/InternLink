@@ -83,7 +83,7 @@ class StudentFragment : Fragment() {
         }
         setupViewModel()
         Log.d(TAG, "Setting initial values...")
-        avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar.data))
+        avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
         //countryName-Code -> getting code
         //TODO: get code for country
 //        countryEdit.setCountryForNameCode(company!!.country.split("-")[1])
@@ -147,7 +147,7 @@ class StudentFragment : Fragment() {
         usernameText.text = "Hello, $username"
 
         viewModel.playerUpdate.observe(viewLifecycleOwner, Observer { player ->
-            avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(player!!.avatar.data))
+            avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(player!!.avatar!!.data))
             this.company = player
             AppPreferences.setCurrentPlayer(player)
         })
@@ -202,7 +202,7 @@ class StudentFragment : Fragment() {
 
     private fun setAvatar(){
         Log.d(TAG, "Saving avatar")
-        val avatar = AvatarHolder()
+        var avatar = AvatarHolder()
         avatar.data = ImageUtils.bitmapToArray((avatarEdit.drawable as BitmapDrawable).bitmap)
         company!!.avatar = avatar
         viewModel.updateProfile(company!!)

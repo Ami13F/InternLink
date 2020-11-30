@@ -19,16 +19,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kotlinapp.R
+import com.kotlinapp.auth.data.User
 import com.kotlinapp.auth.login.afterTextChanged
 import com.kotlinapp.fragments.AbstractAccountFragment
 import com.kotlinapp.model.AvatarHolder
+import com.kotlinapp.model.Student
 import com.kotlinapp.utils.TAG
 import com.kotlinapp.utils.ImageUtils
 import com.kotlinapp.utils.ImageUtils.FILE_SELECTED
 import com.kotlinapp.utils.ImageUtils.REQUEST_CAMERA
 import com.kotlinapp.utils.ImageUtils.galleryIntent
 import com.kotlinapp.utils.Permissions
+import kotlinx.android.synthetic.main.create_company_account_fragment.*
 import kotlinx.android.synthetic.main.create_student_account_fragment.*
+import kotlinx.android.synthetic.main.create_student_account_fragment.avatarImage
+import kotlinx.android.synthetic.main.create_student_account_fragment.descriptionField
+import kotlinx.android.synthetic.main.create_student_account_fragment.emailField
+import kotlinx.android.synthetic.main.create_student_account_fragment.passwordField
+import kotlinx.android.synthetic.main.create_student_account_fragment.saveStudentAccountBtn
 import java.io.IOException
 
 
@@ -65,17 +73,18 @@ class CreateStudentAccountFragment : AbstractAccountFragment() {
             Log.v(TAG, "save item")
 
             val email = emailField.text.toString()
-            val username = nameField.text.toString()
-            val country = countryField.selectedCountryName + "-" + countryField.selectedCountryNameCode
-
             val password = passwordField.text.toString()
+
+            val firstName = firstNameField.text.toString()
+            val lastName = lastNameField.text.toString()
+            val description = descriptionField.text.toString()
+            val country = countryField.selectedCountryName + "-" + countryField.selectedCountryNameCode
 
             avatar.data = ImageUtils.bitmapToArray((avatarImage.drawable as BitmapDrawable).bitmap)
 
-            //TODO: save accout
-//            viewModel.saveAccount( User(email, password),
-//                Company(avatar, country)
-//            )
+            viewModel.saveStudentAccount( User(email, password),
+                Student(firstName, lastName, description, avatar, country)
+            )
         }
     }
 
@@ -101,18 +110,14 @@ class CreateStudentAccountFragment : AbstractAccountFragment() {
         })
 
         viewModel.validFormState.observe(viewLifecycleOwner, Observer { validState->
-            //TODO: uncomment
-//            saveAccountBtn.isEnabled = validState.isDataValid
-//
-//            if(validState.emailError != null){
-//                emailField.error = getString(validState.emailError)
-//            }
-//            if(validState.usernameError != null){
-//                usernameField.error = getString(validState.usernameError)
-//            }
-//            if(validState.passwordError != null){
-//                passwordField.error = getString(validState.passwordError)
-//            }
+            saveStudentAccountBtn.isEnabled = validState.isDataValid
+
+            if(validState.emailError != null){
+                emailField.error = getString(validState.emailError!!)
+            }
+            if(validState.passwordError != null){
+                passwordField.error = getString(validState.passwordError!!)
+            }
         })
 
         // If is done typing validate

@@ -2,6 +2,7 @@ package com.kotlinapp.auth.account
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.data.User
@@ -13,11 +14,12 @@ import kotlinx.coroutines.launch
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.LitterDatabase
 import com.kotlinapp.R
+import com.kotlinapp.model.Student
 
 class AccountViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mutableCompleted = MutableLiveData<Boolean>().apply { value = false }
-    private val mutableExceptionEmail = MutableLiveData<Exception>().apply { value = null }
+    private var mutableExceptionEmail = MutableLiveData<Exception?>().apply { value = null }
     private val mutableExceptionUsername = MutableLiveData<Exception>().apply { value = null }
 
     private val exitsEmail = MutableLiveData<Boolean>().apply { value = false }
@@ -61,18 +63,33 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         return true
     }
 
-    fun saveAccount(user: User, company: Company) {
+    fun saveAccount(user: User, company: Company){
         viewModelScope.launch {
             Log.v(TAG, "Create account...")
             when(val result =  AuthApi.createCompanyAccount(user, company)) {
                 is Result.Success -> {
-                    itemRepository.save(company)
                     //Because we can't override default value from id in loopback
 //                    itemRepository.updateUser(user)
                     mutableCompleted.value = true
                 }
-                is Result.Error -> {
-                    Log.w(TAG, "Create account failed", result.exception)
+                is Result.Error ->{
+                    Log.w(TAG, "Failed create company account ${result?.exception} \n Message: ${result?.exception!!.message}")
+                }
+            }
+        }
+    }
+
+    fun saveStudentAccount(user: User, student: Student){
+        viewModelScope.launch {
+            Log.v(TAG, "Create account...")
+            when(val result =  AuthApi.createStudentAccount(user, student)) {
+                is Result.Success -> {
+                    //Because we can't override default value from id in loopback
+//                    itemRepository.updateUser(user)
+                    mutableCompleted.value = true
+                }
+                is Result.Error ->{
+                    Log.w(TAG, "Failed create company account ${result?.exception} \n Message: ${result?.exception!!.message}")
                 }
             }
         }

@@ -7,6 +7,7 @@ import com.kotlinapp.core.Api
 import com.kotlinapp.utils.Result
 import com.kotlinapp.auth.data.UserResponse
 import com.kotlinapp.model.Company
+import com.kotlinapp.model.Student
 import com.kotlinapp.utils.TAG
 import retrofit2.http.*
 import retrofit2.Call
@@ -26,12 +27,20 @@ object AuthApi {
         fun getAllUsers(): Call<List<User>>
 
         @Headers("Content-Type: application/json")
-        @POST("users/sign-up/company")
+        @POST("company/sign-up")
         suspend fun createUserAccount(@Body user: User): UserResponse
 
         @Headers("Content-Type: application/json")
-        @POST("users/sign-up/{id}/company")
-        suspend fun createCompanyAccount(@Path("id") id: Int, @Body company: Company): UserResponse
+        @POST("student/sign-up")
+        suspend fun createStudentUserAccount(@Body user: User): UserResponse
+
+        @Headers("Content-Type: application/json")
+        @POST("users/{id}/company")
+        suspend fun createCompanyAccount(@Path("id") id: String, @Body company: Company): Company
+
+        @Headers("Content-Type: application/json")
+        @POST("users/{id}/student")
+        suspend fun createStudentAccount(@Path("id") id: String, @Body student: Student): Student
 
         @Headers("Content-Type: application/json")
         @PUT("users/{id}")
@@ -63,17 +72,28 @@ object AuthApi {
             Result.Error(e)
         }
     }
-    suspend fun createCompanyAccount(user: User, company: Company): Result<UserResponse> {
+    suspend fun createCompanyAccount(user: User, company: Company): Result<Company> {
         return try{
             val userResponse = authService.createUserAccount(user)
             Api.tokenInterceptor.token = userResponse.token
-            company.id = userResponse.id
+            val companyResult = authService.createCompanyAccount(userResponse.id, company)
             Log.d(TAG,"User account is... $userResponse")
-            Result.Success(userResponse)
+            Result.Success(companyResult)
         }catch(e: Exception){
             Result.Error(e)
         }
     }
 
+    suspend fun createStudentAccount(user: User, student: Student): Result<Student> {
+        return try{
+            val userResponse = authService.createStudentUserAccount(user)
+            Api.tokenInterceptor.token = userResponse.token
+            val studentResult = authService.createStudentAccount(userResponse.id, student)
+            Log.d(TAG,"User account is... $userResponse")
+            Result.Success(studentResult)
+        }catch(e: Exception){
+            Result.Error(e)
+        }
+    }
 
 }

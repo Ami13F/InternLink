@@ -35,7 +35,7 @@ class LeaderboardViewModel(application: Application): AndroidViewModel(applicati
 
     init {
         itemRepository = CompanyRepository(itemDao)
-        players = itemRepository.players
+        players = itemRepository.companies
         users = itemRepository.users
 //        leaderList = itemRepository.leaders
 //        leaderCountryList = itemDao.getSortedByCountry(country)

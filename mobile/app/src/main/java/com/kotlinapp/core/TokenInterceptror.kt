@@ -13,10 +13,9 @@ class TokenInterceptor : Interceptor {
             return chain.proceed(original)
         }
 
-        val url = "$originalUrl?access_token=$token"
         val requestBuilder = original.newBuilder()
             .addHeader("Authorization", "Bearer $token")
-            .url(url)
+            .url(originalUrl)
         val request = requestBuilder.build()
         return chain.proceed(request)
     }

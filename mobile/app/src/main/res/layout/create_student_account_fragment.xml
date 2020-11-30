@@ -15,103 +15,137 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Student"
-        android:textColor="#555252"
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/emailField"
-        android:hint="Email"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:textAlignment="center"
-        android:layout_height="40dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:importantForAutofill="no"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/round_textview"
-        android:backgroundTint="#3B052CAE"
-        android:textSize="20sp" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/passwordField"
-        android:hint="Password"
-        android:layout_width="match_parent"
-        android:textAlignment="center"
-        android:layout_height="40dp"
-        android:layout_marginTop="270dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
-        android:background="@drawable/round_textview"
-        android:backgroundTint="#3B052CAE"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/nameField"
-        android:hint="Name"
-        android:layout_width="match_parent"
-        android:textAlignment="center"
-        android:layout_height="40dp"
-        android:layout_marginTop="225dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:background="@drawable/round_textview"
-        android:backgroundTint="#3B052CAE"
-        android:textSize="20dp" />
-
-
-    <com.hbb20.CountryCodePicker
-        android:id="@+id/countryField"
-        android:hint="Country"
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="315dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:background="@drawable/round_textview"
-        android:backgroundTint="#3B052CAE"
-        android:importantForAutofill="no"
-        app:ccpDialog_showCloseIcon="true"
-        app:ccp_defaultPhoneCode="40"
-        app:ccp_showFullName="true"
-        app:ccp_showPhoneCode="false" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:cardCornerRadius="50dp"
-        app:strokeWidth="1dp"
-        android:theme="@style/Theme.MaterialComponents.Light"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
-        app:strokeColor="@color/cardview_dark_background">
-        <ImageView
-            android:id="@+id/avatarImage"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/personicon"
-            android:contentDescription="Avatar" />
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintEnd_toEndOf="@+id/emailField"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:strokeColor="@color/cardview_dark_background"
+            app:strokeWidth="1dp">
 
-    <Button
-        android:id="@+id/saveStudentAccountBtn"
-        android:text="Save account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="60dp"
-        android:textColor="#ffffff"
-        app:backgroundTint="#2979FF" />
+            <ImageView
+                android:id="@+id/avatarImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="Avatar"
+                app:srcCompat="@drawable/personicon" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Student"
+            android:textColor="#555252"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/emailField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#6000BCD4"
+            android:hint="Email"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@+id/avatar"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <EditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#6000BCD4"
+            android:hint="Password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/emailField" />
+
+        <EditText
+            android:id="@+id/firstNameField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#6000BCD4"
+            android:hint="First Name"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/passwordField" />
+
+        <EditText
+            android:id="@+id/lastNameField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#6000BCD4"
+            android:hint="Last Name"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/firstNameField" />
+
+        <EditText
+            android:id="@+id/descriptionField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#6000BCD4"
+            android:hint="Description"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/lastNameField" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/countryField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/round_textview"
+            android:backgroundTint="#3B052CAE"
+            android:hint="Country"
+            android:importantForAutofill="no"
+            android:textAlignment="center"
+            app:ccpDialog_showCloseIcon="true"
+            app:ccp_defaultPhoneCode="40"
+            app:ccp_showFullName="true"
+            app:ccp_showPhoneCode="false"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionField" />
+        <Button
+            android:id="@+id/saveStudentAccountBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Save account"
+            android:textColor="#ffffff"
+            app:backgroundTint="#00BCD4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/countryField" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

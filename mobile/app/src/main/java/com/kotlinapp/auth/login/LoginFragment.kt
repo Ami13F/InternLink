@@ -88,7 +88,7 @@ class LoginFragment: Fragment() {
             viewModel.login(username.text.toString(), password.text.toString())
         }
         createStudentAccountBtn.setOnClickListener{
-            findNavController().navigate(R.id.create_account_fragment)
+            findNavController().navigate(R.id.create_student_account_fragment)
         }
         createCompanyAccountBtn.setOnClickListener{
             findNavController().navigate(R.id.create_company_account_fragment)

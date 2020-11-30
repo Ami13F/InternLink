@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.AuthApi.authService
 import com.kotlinapp.auth.data.User
-import com.kotlinapp.core.PlayerApi
+import com.kotlinapp.core.AccountApi
 import retrofit2.await
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.ItemDao
@@ -13,7 +13,7 @@ import com.kotlinapp.utils.TAG
 
 class CompanyRepository (private val itemDao: ItemDao){
 
-    var players = itemDao.getAllPlayers()
+    var companies = itemDao.getAllPlayers()
     var users = itemDao.getAllUsers()
 //    var leaders = itemDao.getSortedEntities()
 
@@ -21,7 +21,7 @@ class CompanyRepository (private val itemDao: ItemDao){
         return try {
             Log.d(TAG,"Refreshing...")
             val usersServer = authService.getAllUsers().await()
-            val items = PlayerApi.service.getPlayers().await()
+            val items = AccountApi.service.getPlayers().await()
             Log.d(TAG,"Users from server: $usersServer")
             Log.d(TAG,"Players from server: $items")
             for(user in usersServer){
@@ -37,25 +37,13 @@ class CompanyRepository (private val itemDao: ItemDao){
         }
     }
 
-    fun findPlayer(playerId: Int): LiveData<Company> {
-        return itemDao.findPlayer(playerId)
+    fun findPlayer(name: String): LiveData<Company> {
+        return itemDao.findPlayer(name)
     }
 
      fun findUser(userEmail: String): LiveData<User> {
         return itemDao.findUser(userEmail)
 
-    }
-
-    suspend fun save(company: Company): Result<Company> {
-        return try {
-            Log.d(TAG,"Saving player...$company")
-            val createdItem = PlayerApi.service.create(company)
-            Log.d(TAG,"Saved player...$createdItem")
-            Result.Success(createdItem)
-        }catch (e: Exception){
-            Log.d(TAG,"Error saving player...${e.message}")
-            Result.Error(e)
-        }
     }
 
 //    suspend fun updateUser(item: User): Result<User> {
@@ -82,7 +70,7 @@ class CompanyRepository (private val itemDao: ItemDao){
 
     suspend fun updatePlayer(item: Company): Result<Company> {
         return try {
-            val updatedItem = PlayerApi.service.update(item)
+            val updatedItem = AccountApi.service.update(item)
             Result.Success(updatedItem)
         }catch(e: Exception){
             Result.Error(e)
