@@ -24,6 +24,9 @@ export class Company extends Entity {
 
   @property({
     type: 'buffer',
+    mysql: {
+      dataType: "blob"
+    }
   })
   avatar?: Buffer;
 

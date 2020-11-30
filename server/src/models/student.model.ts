@@ -36,6 +36,9 @@ export class Student extends Entity {
 
   @property({
     type: 'buffer',
+    mysql: {
+      dataType: "blob"
+    }
   })
   avatar?: Buffer;
 
