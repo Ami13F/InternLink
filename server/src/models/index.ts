@@ -4,3 +4,7 @@ export * from './user-type.model';
 export * from './user.model';
 export * from './student.model';
 export * from './company.model';
+export * from './internship.model';
+export * from './area-of-interest.model';
+export * from './job-application.model';
+export * from './application-status.model';
