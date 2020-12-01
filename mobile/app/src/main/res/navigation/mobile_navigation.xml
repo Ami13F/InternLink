@@ -19,9 +19,20 @@
 
     <fragment
         android:id="@+id/profile_fragment"
+        android:name="com.kotlinapp.fragments.ProfileFragment"
+        android:label="@string/item_edit" />
+
+    <fragment
+        android:id="@+id/student_profile_fragment"
         android:name="com.kotlinapp.fragments.StudentFragment"
         android:label="@string/item_edit"
-        tools:layout="@layout/profile_fragment" />
+        tools:layout="@layout/student_profile_fragment" />
+
+    <fragment
+        android:id="@+id/company_profile_fragment"
+        android:name="com.kotlinapp.fragments.CompanyFragment"
+        android:label="@string/item_edit"
+        tools:layout="@layout/company_profile_fragment"/>
 
     <fragment
         android:id="@+id/create_student_account_fragment"
@@ -34,4 +45,5 @@
         android:name="com.kotlinapp.auth.account.CreateCompanyAccountFragment"
         android:label="@string/item_edit"
         tools:layout="@layout/create_company_account_fragment" />
+
 </navigation>

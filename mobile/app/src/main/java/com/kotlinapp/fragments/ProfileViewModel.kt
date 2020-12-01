@@ -4,12 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.kotlinapp.utils.TAG
-import com.kotlinapp.model.Company
 import com.kotlinapp.model.CompanyRepository
 import kotlinx.coroutines.launch
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.LitterDatabase
 import com.kotlinapp.R
+import com.kotlinapp.model.Company
+import com.kotlinapp.model.Student
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,8 +22,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val mutablePasswordState = MutableLiveData<PasswordState>()
     val passwordState: LiveData<PasswordState> = mutablePasswordState
 
-    private val mutablePlayerUpdate = MutableLiveData<Company>()
-    val playerUpdate = mutablePlayerUpdate
+    private val mutableStudentUpdate = MutableLiveData<Student>()
+    val studentUpdate = mutableStudentUpdate
+
+    private val mutableCompanyUpdate = MutableLiveData<Company>()
+    val companyUpdate = mutableCompanyUpdate
 
     val fetching: LiveData<Boolean> = mutableFetching
     val fetchingError: LiveData<Exception> = mutableException
@@ -60,24 +64,25 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun updateProfile(company: Company) {
-        viewModelScope.launch {
-            Log.v(TAG, "Update Profile...")
-            mutableFetching.value = true
-            mutableException.value = null
-
-            when(val result= itemRepository.updatePlayer(company)) {
-                is Result.Success -> {
-                    Log.d(TAG, "Update succeeded")
-                    mutablePlayerUpdate.value = company
-                }
-                is Result.Error -> {
-                    Log.w(TAG, "Update failed", result.exception)
-                    mutableException.value = result.exception
-                }
-            }
-            mutableFetching.value = false
-        }
+    fun updateProfile(student: Student) {
+        //TODO: uncomment this
+//        viewModelScope.launch {
+//            Log.v(TAG, "Update Profile...")
+//            mutableFetching.value = true
+//            mutableException.value = null
+//
+//            when(val result= itemRepository.updateStudent(student)) {
+//                is Result.Success -> {
+//                    Log.d(TAG, "Update succeeded")
+//                    mutablePlayerUpdate.value = student
+//                }
+//                is Result.Error -> {
+//                    Log.w(TAG, "Update failed", result.exception)
+//                    mutableException.value = result.exception
+//                }
+//            }
+//            mutableFetching.value = false
+//        }
     }
 
     fun changePassword(oldPass: String, newPass: String) {

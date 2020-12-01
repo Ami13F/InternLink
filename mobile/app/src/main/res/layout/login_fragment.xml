@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF"
     android:backgroundTintMode="src_over"
+    android:backgroundTint="#769E9D9D"
     android:orientation="vertical"
     tools:context=".auth.login.LoginFragment">
 
@@ -17,9 +17,11 @@
         android:layout_marginTop="150dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/round_corners"
-        android:backgroundTint="#3B0C5C77"
+        android:backgroundTint="#EE0CBAA6"
+        android:textColorHint="#FFFFFF"
+        android:textColor="#FFFFFF"
         android:hint="@string/username"
-        android:text="admin@gmail.com"
+        android:text="ami@a.com"
         android:textAlignment="center" />
 
     <EditText
@@ -30,7 +32,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/round_corners"
-        android:backgroundTint="#3B0C5C77"
+        android:backgroundTint="#EE0CBAA6"
+        android:textColorHint="#FFFFFF"
+        android:textColor="#FFFFFF"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:text="123456"
@@ -83,6 +87,7 @@
             android:id="@+id/createText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
             android:text="Create account"
             android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -105,6 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Student"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="@+id/createStudentAccountBtn"
             app:layout_constraintStart_toStartOf="@+id/createStudentAccountBtn"
             app:layout_constraintTop_toBottomOf="@+id/createStudentAccountBtn" />
@@ -124,6 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Company"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="@+id/createCompanyAccountBtn"
             app:layout_constraintStart_toStartOf="@+id/createCompanyAccountBtn"
             app:layout_constraintTop_toBottomOf="@+id/createCompanyAccountBtn" />

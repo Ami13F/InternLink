@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kotlinapp.MainActivity
 import com.kotlinapp.R
-import com.kotlinapp.auth.data.TokenHolder
+import com.kotlinapp.auth.data.UserResponse
 import com.kotlinapp.utils.Result
 import kotlinx.android.synthetic.main.login_fragment.*
 
@@ -28,6 +28,7 @@ class LoginFragment: Fragment() {
     ): View?{
         return inflater.inflate(R.layout.login_fragment, container, false)
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
@@ -39,22 +40,21 @@ class LoginFragment: Fragment() {
     private fun setupLoginForm(){
         viewModel.validateFormState.observe(viewLifecycleOwner, Observer{
             val loginState = it?: return@Observer
-            //TODO: uncomment
-//            login.isEnabled = loginState.isDataValid
-//            if(loginState.usernameError != null){
-//                username.error = getString(loginState.usernameError)
-//            }
-//            if (loginState.passwordError != null) {
-//                password.error = getString(loginState.passwordError)
-//            }
+            login.isEnabled = loginState.isDataValid
+            if(loginState.emailError != null){
+                username.error = getString(loginState.emailError!!)
+            }
+            if (loginState.passwordError != null) {
+                password.error = getString(loginState.passwordError!!)
+            }
         })
+
         viewModel.loginResult.observe(viewLifecycleOwner,Observer{
             val loginResult = it ?: return@Observer
-            loading.visibility =View.GONE
-            if(loginResult is Result.Success<TokenHolder>){
+            loading.visibility = View.GONE
+            if(loginResult is Result.Success<UserResponse>){
                 findNavController().navigate(R.id.profile_fragment)
                 (activity as MainActivity).bottomNav.visibility = View.VISIBLE
-
             }else if(loginResult is Result.Error){
                 error_text.text = "Login error ${loginResult.exception!!.message}"
                 if (error_text.text.contains("401")){
@@ -63,6 +63,7 @@ class LoginFragment: Fragment() {
                 error_text.visibility = View.VISIBLE
             }
         })
+
         username.afterTextChanged {
             viewModel.loginDataChanged(
                 username.text.toString(),
@@ -87,6 +88,7 @@ class LoginFragment: Fragment() {
 
             viewModel.login(username.text.toString(), password.text.toString())
         }
+
         createStudentAccountBtn.setOnClickListener{
             findNavController().navigate(R.id.create_student_account_fragment)
         }
@@ -96,12 +98,13 @@ class LoginFragment: Fragment() {
     }
 
 }
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
-}
+
+    fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                afterTextChanged.invoke(editable.toString())
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }

@@ -26,24 +26,24 @@ import com.kotlinapp.auth.login.afterTextChanged
 import com.kotlinapp.core.Api
 import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.AvatarHolder
-import com.kotlinapp.model.Student
+import com.kotlinapp.model.Company
 import com.kotlinapp.utils.ImageUtils
 import com.kotlinapp.utils.ImageUtils.FILE_SELECTED
 import com.kotlinapp.utils.ImageUtils.REQUEST_CAMERA
 import com.kotlinapp.utils.ImageUtils.galleryIntent
 import com.kotlinapp.utils.Permissions
 import com.kotlinapp.utils.TAG
-import kotlinx.android.synthetic.main.create_student_account_fragment.progress
-import kotlinx.android.synthetic.main.student_profile_fragment.*
+import kotlinx.android.synthetic.main.company_profile_fragment.*
+import kotlinx.android.synthetic.main.create_company_account_fragment.progress
 import java.io.IOException
 
 
 @SuppressLint("SetTextI18n")
-class StudentFragment : Fragment() {
+class CompanyFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
 
-    private var student: Student? = null
+    private var company: Company? = null
 
     private var userChoose: String = ""
 
@@ -52,20 +52,20 @@ class StudentFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.student_profile_fragment, container, false)
+        return inflater.inflate(R.layout.company_profile_fragment, container, false)
     }
 
     override fun onResume() {
         super.onResume()
-        student = AppPreferences.getCurrentStudentUser()
-//        requireActivity().intent.putExtra("Score", 0)
+        company = AppPreferences.getCurrentCompanyUser()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 //        Check if the user is logged
+
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        student = AppPreferences.getCurrentStudentUser()
+        company = AppPreferences.getCurrentCompanyUser()
         Api.tokenInterceptor.token = AppPreferences.token
 
         logoutBtn.setOnClickListener{
@@ -75,17 +75,9 @@ class StudentFragment : Fragment() {
         }
         setupViewModel()
         Log.d(TAG, "Setting initial values...")
-        avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
-
-        countryEdit.setCountryForNameCode(student!!.country.split("-")[1])
+        avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
 
         setupPasswordState()
-        countrySpinner()
-
-        avatarEdit.setOnClickListener{
-            Log.d(TAG, "Choosing avatar")
-            avatarChooser()
-        }
 
         saveEditBtn.setOnClickListener {
             Log.v(TAG, "Update Password")
@@ -137,16 +129,17 @@ class StudentFragment : Fragment() {
 //        scoreTotal.text = "Your score: $score"
         usernameText.text = "Hello, $username"
 
-        viewModel.studentUpdate.observe(viewLifecycleOwner, Observer { student ->
-            avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
-            this.student = student
-            AppPreferences.setCurrentUser(student)
+        viewModel.companyUpdate.observe(viewLifecycleOwner, Observer { company ->
+            avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
+            this.company = company
+            AppPreferences.setCurrentUser(company)
         })
 
         viewModel.fetching.observe(viewLifecycleOwner, Observer { fetching ->
             Log.v(TAG, "update fetching")
             progress.visibility = if (fetching) View.VISIBLE else View.GONE
         })
+
         viewModel.fetchingError.observe(viewLifecycleOwner, Observer { exception ->
             if (exception != null) {
                 Log.v(TAG, "update fetching error")
@@ -169,26 +162,14 @@ class StudentFragment : Fragment() {
         })
     }
 
-    private fun countrySpinner() {
-        var country: String
-        countryEdit.setOnCountryChangeListener{
-            country = countryEdit.selectedCountryName + "-" + countryEdit.selectedCountryNameCode
-            Log.d(TAG, "Selected country... $country")
-//            company!!.country = country
-//            TODO: uncomment this
-//            viewModel.updateProfile(student!!)
-            AppPreferences.setCurrentUser(student!!)
-        }
-    }
-
     private fun setAvatar(){
         Log.d(TAG, "Saving avatar")
         var avatar = AvatarHolder()
         avatar.data = ImageUtils.bitmapToArray((avatarEdit.drawable as BitmapDrawable).bitmap)
-        student!!.avatar = avatar
+        company!!.avatar = avatar
         //TODO: uncomment
 //        viewModel.updateProfile(student!!)
-        AppPreferences.setCurrentUser(student!!)
+        AppPreferences.setCurrentUser(company!!)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

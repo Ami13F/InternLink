@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:backgroundTintMode="src_over"
     android:backgroundTint="#769E9D9D"
-    tools:context=".fragments.StudentFragment">
+    tools:context=".fragments.CompanyFragment">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/usernameText"
-            android:text="Hello, "
+            android:text="Hello Company, "
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginBottom="250dp"
@@ -55,36 +55,7 @@
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
 
-        <TextView
-            android:id="@+id/scoreTotal"
-            android:text="Your Score:"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="100dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF" />
-
     </FrameLayout>
-
-    <com.hbb20.CountryCodePicker
-        android:id="@+id/countryEdit"
-        android:hint="Country"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="290dp"
-        android:importantForAutofill="no"
-        android:layout_marginHorizontal="30dp"
-        android:background="@drawable/round_corners"
-        android:backgroundTint="#5A2979FF"
-        app:ccp_arrowColor="#FFFFFF"
-        app:ccpDialog_showCloseIcon="true"
-        app:ccp_contentColor="#FFFFFF"
-        app:ccp_defaultPhoneCode="40"
-        app:ccp_showFullName="true"
-        app:ccp_showPhoneCode="false" />
 
     <TextView
         android:layout_width="match_parent"

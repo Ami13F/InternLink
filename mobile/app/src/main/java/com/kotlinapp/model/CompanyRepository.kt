@@ -21,7 +21,7 @@ class CompanyRepository (private val itemDao: ItemDao){
         return try {
             Log.d(TAG,"Refreshing...")
             val usersServer = authService.getAllUsers().await()
-            val items = AccountApi.service.getPlayers().await()
+            val items = AccountApi.service.getCompanies().await()
             Log.d(TAG,"Users from server: $usersServer")
             Log.d(TAG,"Players from server: $items")
             for(user in usersServer){
@@ -68,14 +68,14 @@ class CompanyRepository (private val itemDao: ItemDao){
         }
     }
 
-    suspend fun updatePlayer(item: Company): Result<Company> {
-        return try {
-            val updatedItem = AccountApi.service.update(item)
-            Result.Success(updatedItem)
-        }catch(e: Exception){
-            Result.Error(e)
-        }finally {
-            itemDao.update(item)
-        }
-    }
+//    suspend fun updateStudent(item: Student): Result<Student> {
+//        return try {
+//            val updatedItem = AccountApi.service.update(item)
+//            Result.Success(updatedItem)
+//        }catch(e: Exception){
+//            Result.Error(e)
+//        }finally {
+//            itemDao.update(item)
+//        }
+//    }
 }

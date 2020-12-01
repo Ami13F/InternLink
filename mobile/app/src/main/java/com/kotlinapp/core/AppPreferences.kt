@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
+import com.kotlinapp.auth.data.UserRole
 import com.kotlinapp.model.Company
+import com.kotlinapp.model.Student
 import com.kotlinapp.utils.TAG
 
 object AppPreferences {
@@ -17,6 +19,7 @@ object AppPreferences {
     private val IS_LOGIN = Pair("is_login", false)
     private val USERNAME = Pair("username", "")
     private val TOKEN = Pair("token", "")
+    private val ROLE = Pair("role", "")
 
 
     fun init(context: Context) {
@@ -33,16 +36,22 @@ object AppPreferences {
         editor.apply()
     }
 
-    fun getCurrentPlayer(): Company {
-        val json: String = preferences.getString("player", "")!!
+    fun getCurrentCompanyUser(): Company {
+        val json: String = preferences.getString("currentUser", "")!!
         Log.d(TAG,json)
         return gson.fromJson(json, Company::class.java)
     }
 
-    fun setCurrentPlayer(company: Company){
+    fun getCurrentStudentUser(): Student {
+        val json: String = preferences.getString("currentUser", "")!!
+        Log.d(TAG,json)
+        return gson.fromJson(json, Student::class.java)
+    }
+
+    fun <T> setCurrentUser(user: T){
         val prefsEditor: SharedPreferences.Editor = preferences.edit()
-        val json: String = gson.toJson(company)
-        prefsEditor.putString("player", json)
+        val json: String = gson.toJson(user)
+        prefsEditor.putString("currentUser", json)
         prefsEditor.apply()
     }
 
@@ -54,11 +63,18 @@ object AppPreferences {
             it.putBoolean(IS_LOGIN.first, value)
         }
 
-    var username: String
+    var email: String
         get() = preferences.getString(
             USERNAME.first, USERNAME.second) ?: ""
         set(value) = preferences.edit {
             it.putString(USERNAME.first, value)
+        }
+
+    var role: String
+        get() = preferences.getString(
+            ROLE.first, ROLE.second) ?: ""
+        set(value) = preferences.edit {
+            it.putString(ROLE.first, value)
         }
 
     var token: String

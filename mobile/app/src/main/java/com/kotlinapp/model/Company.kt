@@ -16,7 +16,7 @@ data class Company (
     @TypeConverters(AvatarConverter::class)
     @ColumnInfo(name = "avatar")
     var avatar: AvatarHolder?
-){
+) {
     constructor(avatar: AvatarHolder) : this("", "", avatar)
 
     constructor(): this( "", "", AvatarHolder())

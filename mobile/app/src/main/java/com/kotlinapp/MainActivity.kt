@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -67,6 +66,14 @@ class MainActivity : AppCompatActivity(),
             R.id.leaderboard_fragment -> {
                 Log.d(TAG, "Leaderboard")
                 findNavController(R.id.nav_host_fragment).navigate(R.id.leaderboard_fragment)
+            }
+            R.id.student_profile_fragment -> {
+                Log.d(TAG, "Profile")
+                findNavController(R.id.nav_host_fragment).navigate(R.id.student_profile_fragment)
+            }
+            R.id.company_profile_fragment -> {
+                Log.d(TAG, "Profile")
+                findNavController(R.id.nav_host_fragment).navigate(R.id.company_profile_fragment)
             }
             R.id.profile_fragment -> {
                 Log.d(TAG, "Profile")

@@ -50,7 +50,7 @@ class PlayersListAdapter(
             Log.d(TAG, "Size elements: $itemCount")
             val leader = leaders[position]
             //Set current user color
-            if(leader.email == AppPreferences.username)
+            if(leader.email == AppPreferences.email)
                 holder.layout.setBackgroundColor(Color.parseColor("#8C6A6868"))
             else
                 holder.layout.setBackgroundColor(Color.parseColor("#009E9D9D"))

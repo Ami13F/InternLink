@@ -21,7 +21,7 @@ data class Student (
 
     @ColumnInfo(name = "country")
     var country : String
-){
+) {
 
     override fun toString(): String = "FirstName: $firstName LastName: $lastName Country: $country"
 }

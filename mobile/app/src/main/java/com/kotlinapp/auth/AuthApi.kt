@@ -20,7 +20,15 @@ object AuthApi {
     interface AuthService{
         @Headers("Content-Type: application/json")
         @POST("users/login")
-        suspend fun login(@Body user: User): TokenHolder
+        suspend fun login(@Body user: User): UserResponse
+
+        @Headers("Content-Type: application/json")
+        @GET("users/{id}/student")
+        suspend fun getStudent(@Path("id") id: String): Student
+
+        @Headers("Content-Type: application/json")
+        @GET("users/{id}/company")
+        suspend fun getCompany(@Path("id") id: String): Company
 
         @Headers("Content-Type: application/json")
         @GET("users/")
@@ -57,7 +65,7 @@ object AuthApi {
     }
      val authService:AuthService = Api.retrofit.create(AuthService::class.java)
 
-    suspend fun login(user: User): Result<TokenHolder> {
+    suspend fun login(user: User): Result<UserResponse> {
         return try{
             Result.Success(authService.login(user))
         }catch(e: Exception){
@@ -65,13 +73,10 @@ object AuthApi {
         }
     }
 
-    suspend fun findOne(email: String): Result<User> {
-        return try{
-            Result.Success(authService.findOne(email))
-        }catch(e: Exception){
-            Result.Error(e)
-        }
-    }
+    suspend fun getStudent(id: String) = authService.getStudent(id)
+
+    suspend fun getCompany(id: String) = authService.getCompany(id)
+
     suspend fun createCompanyAccount(user: User, company: Company): Result<Company> {
         return try{
             val userResponse = authService.createUserAccount(user)
