@@ -10,8 +10,8 @@ object AccountApi{
         @GET("Companies")
         fun getCompanies(): Call<List<Company>>
 
-        @GET("Companies/{id}")
-        suspend fun find(@Path("id") personId: Int): Company
+        @PATCH("company/{id}")
+        suspend fun getCompany(@Path("id") personId: Int): Company
 
         @Headers("Content-Type: application/json")
         @GET("Companies/findOne")

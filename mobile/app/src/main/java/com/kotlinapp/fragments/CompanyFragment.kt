@@ -14,6 +14,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kotlinapp.R
 import com.kotlinapp.auth.data.AuthRepository
-import com.kotlinapp.auth.data.UserRole
 import com.kotlinapp.auth.login.afterTextChanged
 import com.kotlinapp.core.Api
 import com.kotlinapp.core.AppPreferences
@@ -78,6 +79,9 @@ class CompanyFragment : Fragment() {
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
 
         setupPasswordState()
+        addInternshipBtn.setOnClickListener {
+            showCustomDialog()
+        }
 
         saveEditBtn.setOnClickListener {
             Log.v(TAG, "Update Password")
@@ -87,6 +91,26 @@ class CompanyFragment : Fragment() {
             )
         }
 
+    }
+
+    private lateinit var alertDialog: AlertDialog
+    private fun showCustomDialog() {
+        val inflater: LayoutInflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.internship_dialog_fragment, null)
+
+        val header_txt = dialogView.findViewById<TextView>(R.id.header)
+        val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
+        saveInternshipBtn.setOnClickListener {
+            alertDialog.hide()
+            Toast.makeText(this.context, "Internship saved", Toast.LENGTH_SHORT).show()
+        }
+        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this.context)
+        dialogBuilder.setOnDismissListener { }
+        dialogBuilder.setView(dialogView)
+
+        alertDialog = dialogBuilder.create();
+//        alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
+        alertDialog.show()
     }
 
     private fun setupPasswordState(){
