@@ -38,6 +38,7 @@ object AuthRepository {
             val company = AuthApi.getCompany(id)
             AppPreferences.setCurrentUser(company)
         }
+        AppPreferences.currentUserId = id
         AppPreferences.role = response.role.toString()
         AppPreferences.isLogin = true
         AppPreferences.email = user.email

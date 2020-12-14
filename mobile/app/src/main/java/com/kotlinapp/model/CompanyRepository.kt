@@ -6,6 +6,8 @@ import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.AuthApi.authService
 import com.kotlinapp.auth.data.User
 import com.kotlinapp.core.AccountApi
+import com.kotlinapp.core.AccountApi.service
+import com.kotlinapp.core.AppPreferences
 import retrofit2.await
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.ItemDao
@@ -16,6 +18,8 @@ class CompanyRepository (private val itemDao: ItemDao){
     var companies = itemDao.getAllPlayers()
     var users = itemDao.getAllUsers()
 //    var leaders = itemDao.getSortedEntities()
+
+    suspend fun saveInternship(internship: Internship) = AccountApi.saveInternship(internship)
 
     suspend fun sortLeaders(): Result<Boolean> {
         return try {

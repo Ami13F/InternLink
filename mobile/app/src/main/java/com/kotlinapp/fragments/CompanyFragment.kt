@@ -15,7 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,6 +28,7 @@ import com.kotlinapp.core.Api
 import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.AvatarHolder
 import com.kotlinapp.model.Company
+import com.kotlinapp.model.Internship
 import com.kotlinapp.utils.ImageUtils
 import com.kotlinapp.utils.ImageUtils.FILE_SELECTED
 import com.kotlinapp.utils.ImageUtils.REQUEST_CAMERA
@@ -98,11 +99,16 @@ class CompanyFragment : Fragment() {
         val inflater: LayoutInflater = this.layoutInflater
         val dialogView: View = inflater.inflate(R.layout.internship_dialog_fragment, null)
 
-        val header_txt = dialogView.findViewById<TextView>(R.id.header)
+        val title = dialogView.findViewById<EditText>(R.id.titleField).text
+        val location = dialogView.findViewById<EditText>(R.id.locationField).text
+        val description = dialogView.findViewById<EditText>(R.id.descriptionField).text
+        val startDate = dialogView.findViewById<EditText>(R.id.startDateField).text
+        val endDate = dialogView.findViewById<EditText>(R.id.endDateField).text
         val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
+
         saveInternshipBtn.setOnClickListener {
+            viewModel.saveInternship(Internship(title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
             alertDialog.hide()
-            Toast.makeText(this.context, "Internship saved", Toast.LENGTH_SHORT).show()
         }
         val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this.context)
         dialogBuilder.setOnDismissListener { }

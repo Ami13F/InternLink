@@ -17,6 +17,7 @@ object AppPreferences {
 
     //SharedPreferences variables
     private val IS_LOGIN = Pair("is_login", false)
+    private val ID = Pair("id", "")
     private val USERNAME = Pair("username", "")
     private val TOKEN = Pair("token", "")
     private val ROLE = Pair("role", "")
@@ -82,6 +83,13 @@ object AppPreferences {
             TOKEN.first, TOKEN.second) ?: ""
         set(value) = preferences.edit {
             it.putString(TOKEN.first, value)
+        }
+
+    var currentUserId: String
+        get() = preferences.getString(
+            ID.first, ID.second) ?: ""
+        set(value) = preferences.edit {
+            it.putString(ID.first, value)
         }
 
 }

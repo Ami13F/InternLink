@@ -10,6 +10,7 @@ import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.LitterDatabase
 import com.kotlinapp.R
 import com.kotlinapp.model.Company
+import com.kotlinapp.model.Internship
 import com.kotlinapp.model.Student
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
@@ -37,6 +38,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     init {
         val itemDao = LitterDatabase.getDatabase(application, viewModelScope).itemDao()
         itemRepository = CompanyRepository(itemDao)
+    }
+
+    fun saveInternship(internship: Internship){
+        viewModelScope.launch {
+            itemRepository.saveInternship(internship)
+        }
     }
 
     fun validatePasswords(oldPass: String, newPass1: String, newPass2: String){
