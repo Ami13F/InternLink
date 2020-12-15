@@ -1,16 +1,14 @@
-import {DefaultCrudRepository} from '@loopback/repository';
-import {JobApplication, JobApplicationRelations} from '../models';
-import {DbDataSource} from '../datasources';
 import {inject} from '@loopback/core';
+import {DefaultCrudRepository} from '@loopback/repository';
+import {MemoryDataSource} from '../datasources';
+import {JobApplication, JobApplicationRelations} from '../models';
 
 export class JobApplicationRepository extends DefaultCrudRepository<
   JobApplication,
   typeof JobApplication.prototype.id,
   JobApplicationRelations
 > {
-  constructor(
-    @inject('datasources.db') dataSource: DbDataSource,
-  ) {
+  constructor(@inject('datasources.memory') dataSource: MemoryDataSource) {
     super(JobApplication, dataSource);
   }
 }

@@ -4,7 +4,7 @@ import {
   HasManyRepositoryFactory,
   repository,
 } from '@loopback/repository';
-import {DbDataSource} from '../datasources';
+import {MemoryDataSource} from '../datasources';
 import {Internship, InternshipRelations, JobApplication} from '../models';
 import {JobApplicationRepository} from './job-application.repository';
 
@@ -19,7 +19,7 @@ export class InternshipRepository extends DefaultCrudRepository<
   >;
 
   constructor(
-    @inject('datasources.db') dataSource: DbDataSource,
+    @inject('datasources.memory') dataSource: MemoryDataSource,
     @repository.getter('JobApplicationRepository')
     protected jobApplicationRepositoryGetter: Getter<JobApplicationRepository>,
   ) {

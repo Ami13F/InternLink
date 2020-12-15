@@ -4,7 +4,7 @@ import {
   HasOneRepositoryFactory,
   repository,
 } from '@loopback/repository';
-import {DbDataSource} from '../datasources';
+import {MemoryDataSource} from '../datasources';
 import {
   Company,
   Student,
@@ -43,7 +43,7 @@ export class UserRepository extends DefaultCrudRepository<
   >;
 
   constructor(
-    @inject('datasources.db') dataSource: DbDataSource,
+    @inject('datasources.memory') dataSource: MemoryDataSource,
     @repository.getter('UserCredentialsRepository')
     protected userCredentialsRepositoryGetter: Getter<
       UserCredentialsRepository
