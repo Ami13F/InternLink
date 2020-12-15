@@ -1,5 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {AreaOfInterest} from './area-of-interest.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {JobApplication} from './job-application.model';
 
 @model()
@@ -42,7 +41,7 @@ export class Internship extends Entity {
 
   @property({
     type: 'string',
-    default: "Enter description here...",
+    default: 'Enter description here...',
   })
   description?: string;
 
@@ -57,9 +56,6 @@ export class Internship extends Entity {
     required: true,
   })
   companyId: string;
-
-  @hasMany(() => AreaOfInterest)
-  areasOfInterest: AreaOfInterest[];
 
   @hasMany(() => JobApplication)
   jobApplications: JobApplication[];
