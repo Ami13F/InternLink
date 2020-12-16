@@ -5,49 +5,34 @@ import androidx.lifecycle.LiveData
 import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.AuthApi.authService
 import com.kotlinapp.auth.data.User
-import com.kotlinapp.core.AccountApi
-import com.kotlinapp.core.AccountApi.service
 import com.kotlinapp.core.AppPreferences
-import retrofit2.await
+import com.kotlinapp.core.InternApi
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.ItemDao
 import com.kotlinapp.utils.TAG
 
 class CompanyRepository (private val itemDao: ItemDao){
 
-    var companies = itemDao.getAllPlayers()
+    var internships : List<InternshipDTO> = emptyList()
     var users = itemDao.getAllUsers()
-//    var leaders = itemDao.getSortedEntities()
 
-    suspend fun saveInternship(internship: Internship) = AccountApi.saveInternship(internship)
+    suspend fun saveInternship(internship: Internship) = InternApi.saveInternship(internship)
 
-    suspend fun sortLeaders(): Result<Boolean> {
+    suspend fun getInternships(): Result<List<InternshipDTO>> {
         return try {
             Log.d(TAG,"Refreshing...")
-            val usersServer = authService.getAllUsers().await()
-            val items = AccountApi.service.getCompanies().await()
-            Log.d(TAG,"Users from server: $usersServer")
-            Log.d(TAG,"Players from server: $items")
-            for(user in usersServer){
-                Log.d(TAG,"USER: $user")
-                itemDao.insertUser(user)
-            }
+            val items = InternApi.service.getInternships()
+            Log.d(TAG,"Internships from server: ${items.size}")
+
+
             for (item in items) {
-                itemDao.insert(item)
+                val company = InternApi.service.getCompany(item.companyId)
+                internships = internships.plus(InternshipDTO(company.name, item.title))
             }
-            Result.Success(true)
+            Result.Success(internships)
         } catch(e: Exception) {
             Result.Error(e)
         }
-    }
-
-    fun findPlayer(name: String): LiveData<Company> {
-        return itemDao.findPlayer(name)
-    }
-
-     fun findUser(userEmail: String): LiveData<User> {
-        return itemDao.findUser(userEmail)
-
     }
 
 //    suspend fun updateUser(item: User): Result<User> {
@@ -74,7 +59,7 @@ class CompanyRepository (private val itemDao: ItemDao){
 
 //    suspend fun updateStudent(item: Student): Result<Student> {
 //        return try {
-//            val updatedItem = AccountApi.service.update(item)
+//            val updatedItem = InternApi.service.update(item)
 //            Result.Success(updatedItem)
 //        }catch(e: Exception){
 //            Result.Error(e)

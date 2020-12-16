@@ -107,7 +107,8 @@ class CompanyFragment : Fragment() {
         val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
 
         saveInternshipBtn.setOnClickListener {
-            viewModel.saveInternship(Internship(title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
+            //todo: change
+            viewModel.saveInternship(Internship(AppPreferences.currentUserId, title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
             alertDialog.hide()
         }
         val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this.context)

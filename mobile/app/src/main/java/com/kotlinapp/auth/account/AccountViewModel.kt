@@ -2,7 +2,6 @@ package com.kotlinapp.auth.account
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.data.User
@@ -12,7 +11,7 @@ import com.kotlinapp.model.Company
 import com.kotlinapp.model.CompanyRepository
 import kotlinx.coroutines.launch
 import com.kotlinapp.utils.Result
-import com.kotlinapp.core.persistence.LitterDatabase
+import com.kotlinapp.core.persistence.InternDatabase
 import com.kotlinapp.R
 import com.kotlinapp.model.Student
 
@@ -35,7 +34,7 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
     private val itemRepository: CompanyRepository
 
     init {
-        val itemDao = LitterDatabase.getDatabase(application, viewModelScope).itemDao()
+        val itemDao = InternDatabase.getDatabase(application, viewModelScope).itemDao()
         itemRepository = CompanyRepository(itemDao)
     }
 

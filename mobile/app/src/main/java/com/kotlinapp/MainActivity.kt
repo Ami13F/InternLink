@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kotlinapp.core.AppPreferences
-import com.kotlinapp.utils.Permissions
 import com.kotlinapp.utils.TAG
 
 
@@ -63,9 +62,9 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Log.d(localClassName,"Item Selected...")
         when (item.itemId) {
-            R.id.leaderboard_fragment -> {
-                Log.d(TAG, "Leaderboard")
-                findNavController(R.id.nav_host_fragment).navigate(R.id.leaderboard_fragment)
+            R.id.internship_fragment -> {
+                Log.d(TAG, "Internships")
+                findNavController(R.id.nav_host_fragment).navigate(R.id.internship_fragment)
             }
             R.id.student_profile_fragment -> {
                 Log.d(TAG, "Profile")

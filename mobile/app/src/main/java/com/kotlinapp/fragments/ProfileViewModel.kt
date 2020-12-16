@@ -7,7 +7,7 @@ import com.kotlinapp.utils.TAG
 import com.kotlinapp.model.CompanyRepository
 import kotlinx.coroutines.launch
 import com.kotlinapp.utils.Result
-import com.kotlinapp.core.persistence.LitterDatabase
+import com.kotlinapp.core.persistence.InternDatabase
 import com.kotlinapp.R
 import com.kotlinapp.model.Company
 import com.kotlinapp.model.Internship
@@ -36,18 +36,18 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val itemRepository: CompanyRepository
 
     init {
-        val itemDao = LitterDatabase.getDatabase(application, viewModelScope).itemDao()
+        val itemDao = InternDatabase.getDatabase(application, viewModelScope).itemDao()
         itemRepository = CompanyRepository(itemDao)
     }
 
-    fun saveInternship(internship: Internship){
+    fun saveInternship(internship: Internship) {
         viewModelScope.launch {
             itemRepository.saveInternship(internship)
         }
     }
 
-    fun validatePasswords(oldPass: String, newPass1: String, newPass2: String){
-         when {
+    fun validatePasswords(oldPass: String, newPass1: String, newPass2: String) {
+        when {
             oldPass.length < 6 -> {
                 mutablePasswordState.value =
                     PasswordState(oldPasswordError = R.string.invalid_password)
@@ -98,7 +98,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             mutableFetching.value = true
             mutableException.value = null
 
-            when(val result= itemRepository.changePassword(oldPass, newPass)) {
+            when (val result = itemRepository.changePassword(oldPass, newPass)) {
                 is Result.Success -> {
                     Log.d(TAG, "Update succeeded")
                     mutableCompleted.value = true

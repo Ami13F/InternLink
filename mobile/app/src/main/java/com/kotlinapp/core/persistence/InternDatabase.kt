@@ -9,22 +9,23 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.kotlinapp.auth.data.User
 import com.kotlinapp.model.AvatarHolder
 import com.kotlinapp.model.Company
+import com.kotlinapp.model.InternshipDTO
 import com.kotlinapp.utils.AvatarConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Company::class, User::class, AvatarHolder::class], version = 3, exportSchema = false)
+@Database(entities = [Company::class, User::class, AvatarHolder::class, InternshipDTO::class], version = 4, exportSchema = false)
 @TypeConverters(AvatarConverter::class)
-abstract class LitterDatabase : RoomDatabase(){
+abstract class InternDatabase : RoomDatabase(){
 
     abstract fun itemDao(): ItemDao
 
     companion object {
         @Volatile
-        private var INSTANCE: LitterDatabase? = null
+        private var INSTANCE: InternDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope) : LitterDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope) : InternDatabase {
             val inst =
                 INSTANCE
             if (inst != null){
@@ -33,7 +34,7 @@ abstract class LitterDatabase : RoomDatabase(){
             val instance =
                 Room.databaseBuilder(
                     context.applicationContext,
-                    LitterDatabase::class.java,
+                    InternDatabase::class.java,
                     "Player"
                 ).addCallback(
                     WordDatabaseCallback(
@@ -57,8 +58,8 @@ abstract class LitterDatabase : RoomDatabase(){
                 }
             }
             suspend fun populateDatabase(itemDao: ItemDao) {
-                itemDao.deleteAllPlayers()
-                itemDao.deleteAllUser()
+//                itemDao.deleteAllPlayers()
+//                itemDao.deleteAllUser()
             }
         }
     }

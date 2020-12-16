@@ -2,21 +2,23 @@ package com.kotlinapp.core
 
 import com.kotlinapp.model.Company
 import com.kotlinapp.model.Internship
+import com.kotlinapp.model.InternshipDTO
 import retrofit2.Call
 import retrofit2.http.*
 
-object AccountApi{
+object InternApi {
 
-    interface Service{
+    interface Service {
         @GET("Companies")
         fun getCompanies(): Call<List<Company>>
 
-        @PATCH("company/{id}")
-        suspend fun getCompany(@Path("id") personId: Int): Company
+        @Headers("Content-Type: application/json")
+        @GET("/internships")
+        suspend fun getInternships(): List<Internship>
 
         @Headers("Content-Type: application/json")
-        @GET("Companies/findOne")
-        suspend fun findOne(@Query("filter") query: String): Company
+        @GET("companies/{id}")
+        suspend fun getCompany(@Path("id") id: String): Company
 
         @Headers("Content-Type: application/json")
         @PUT("Companies")
@@ -28,9 +30,10 @@ object AccountApi{
     }
 
     val service: Service = Api.retrofit.create(
-        Service::class.java)
+        Service::class.java
+    )
 
-    suspend fun saveInternship(internship: Internship){
-        service.saveInternship(AppPreferences.currentUserId, internship)
+    suspend fun saveInternship(internship: Internship) {
+        service.saveInternship(internship.companyId, internship)
     }
 }

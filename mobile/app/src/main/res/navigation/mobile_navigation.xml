@@ -6,10 +6,10 @@
     app:startDestination="@+id/profile_fragment">
 
     <fragment
-        android:id="@+id/leaderboard_fragment"
-        android:name="com.kotlinapp.leaderboard.LeaderBoardFragment"
+        android:id="@+id/internship_fragment"
+        android:name="com.kotlinapp.internships.InternshipsFragment"
         android:label="@string/item_list"
-        tools:layout="@layout/leaderboard_fragment" />
+        tools:layout="@layout/internships_fragment" />
 
     <fragment
         android:id="@+id/login_fragment"

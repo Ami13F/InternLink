@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/leaderboard_fragment"
+        android:id="@+id/internship_fragment"
         android:icon="@drawable/baseline_emoji_events_white_18dp"
-        android:title="Leaderbord"
-        android:tooltipText="Leaderboard" />
+        android:title="Internships"
+        android:tooltipText="Internships" />
 
     <item
         android:id="@+id/student_profile_fragment"
