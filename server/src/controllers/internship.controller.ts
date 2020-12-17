@@ -26,4 +26,22 @@ export class InternshipController {
   ): Promise<Internship[]> {
     return this.internshipRepository.find(filter);
   }
+
+  @get('/internships/{id}', {
+    responses: {
+      '200': {
+        description: 'Get an Array of Internships',
+        content: {
+          'application/json': {
+            schema: {type: 'array', items: getModelSchemaRef(Internship)},
+          },
+        },
+      },
+    },
+  })
+  async getInternship(
+    @param.path.number('id') id: typeof Internship.prototype.id,
+  ): Promise<Internship> {
+    return this.internshipRepository.findById(id);
+  }
 }
