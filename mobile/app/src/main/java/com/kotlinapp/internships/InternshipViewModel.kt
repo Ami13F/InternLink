@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.kotlinapp.auth.data.User
+import com.kotlinapp.core.InternApi
 import com.kotlinapp.utils.TAG
 import com.kotlinapp.model.CompanyRepository
 import kotlinx.coroutines.launch
@@ -11,7 +12,9 @@ import java.lang.Exception
 import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.ItemDao
 import com.kotlinapp.core.persistence.InternDatabase
+import com.kotlinapp.model.Internship
 import com.kotlinapp.model.InternshipDTO
+import com.kotlinapp.model.JobApplication
 
 class InternshipViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,6 +22,9 @@ class InternshipViewModel(application: Application) : AndroidViewModel(applicati
     private val mutableException = MutableLiveData<Exception>().apply { value = null }
     private var mutableInternshipDTO = MutableLiveData<List<InternshipDTO>>().apply { value = emptyList() }
 
+    val mutableInternship = MutableLiveData<Internship>().apply { value = null }
+
+    val internship: LiveData<Internship> = mutableInternship
     val internships: LiveData<List<InternshipDTO>> = mutableInternshipDTO
     val users: LiveData<List<User>>
 
@@ -58,4 +64,15 @@ class InternshipViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
+    fun getInternship(internshipDTO: InternshipDTO){
+        viewModelScope.launch {
+            mutableInternship.value = InternApi.service.getInternship(internshipDTO.id)
+        }
+    }
+
+    fun saveJobApplication(application: JobApplication) {
+        viewModelScope.launch {
+            itemRepository.saveJobApplication(application)
+        }
+    }
 }

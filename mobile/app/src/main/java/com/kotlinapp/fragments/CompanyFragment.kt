@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -105,18 +106,26 @@ class CompanyFragment : Fragment() {
         val startDate = dialogView.findViewById<EditText>(R.id.startDateField).text
         val endDate = dialogView.findViewById<EditText>(R.id.endDateField).text
         val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
+        val closeBtn: Button = dialogView.findViewById(R.id.closeBtn)
+        val applyToInternshipBtn: Button = dialogView.findViewById(R.id.applyToInternshipBtn)
+
+        applyToInternshipBtn.isVisible = false
 
         saveInternshipBtn.setOnClickListener {
             //todo: change
-            viewModel.saveInternship(Internship(AppPreferences.currentUserId, title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
+            viewModel.saveInternship(Internship(null, AppPreferences.currentUserId, title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
             alertDialog.hide()
         }
+
+        closeBtn.setOnClickListener{
+            alertDialog.hide()
+        }
+
         val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this.context)
         dialogBuilder.setOnDismissListener { }
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create();
-//        alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
         alertDialog.show()
     }
 

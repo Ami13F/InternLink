@@ -3,6 +3,7 @@ package com.kotlinapp.core
 import com.kotlinapp.model.Company
 import com.kotlinapp.model.Internship
 import com.kotlinapp.model.InternshipDTO
+import com.kotlinapp.model.JobApplication
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -17,6 +18,10 @@ object InternApi {
         suspend fun getInternships(): List<Internship>
 
         @Headers("Content-Type: application/json")
+        @GET("/internships/{id}")
+        suspend fun getInternship(@Path("id") id : Long): Internship
+
+        @Headers("Content-Type: application/json")
         @GET("companies/{id}")
         suspend fun getCompany(@Path("id") id: String): Company
 
@@ -27,6 +32,10 @@ object InternApi {
         @Headers("Content-Type: application/json")
         @POST("companies/{id}/internships")
         suspend fun saveInternship(@Path("id") id: String, @Body internship: Internship): Internship
+
+        @Headers("Content-Type: application/json")
+        @POST("internships/{id}/job-applications")
+        suspend fun saveJobApplication(@Path("id") id: Long, @Body application: JobApplication): JobApplication
     }
 
     val service: Service = Api.retrofit.create(

@@ -1,4 +1,4 @@
-package com.kotlinapp.internships
+package com.kotlinapp.students
 
 import android.graphics.Color
 import android.util.Log
@@ -12,16 +12,18 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.kotlinapp.R
 import com.kotlinapp.model.InternshipDTO
+import com.kotlinapp.model.Student
 import com.kotlinapp.utils.TAG
-import kotlinx.android.synthetic.main.internship_view.view.*
+import kotlinx.android.synthetic.main.students_view.view.*
 
 
-class InternshipDTOListAdapter(
+class StudentsListAdapter(
     private val fragment: Fragment
-) : RecyclerView.Adapter<InternshipDTOListAdapter.ViewHolder>() {
-    var onItemClick: ((InternshipDTO) -> Unit)? = null
+) : RecyclerView.Adapter<StudentsListAdapter.ViewHolder>() {
 
-    var internshipsDTO = emptyList<InternshipDTO>()
+    var onItemClick : ((Student) -> Unit)? = null
+
+    var students = emptyList<Student>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -29,41 +31,38 @@ class InternshipDTOListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.internship_view, parent, false)
+            .inflate(R.layout.students_view, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (itemCount > 0) {
             Log.d(TAG, "Size elements: $itemCount")
-            val internship = internshipsDTO[position]
+            val student = students[position]
             //Set current user color
-            if (position % 2 == 0)
+            if(position % 2 == 0)
                 holder.layout.setBackgroundColor(Color.parseColor("#8C6A6868"))
             else
                 holder.layout.setBackgroundColor(Color.parseColor("#009E9D9D"))
-            holder.internshipTitle.text = internship.internshipTitle
-            holder.companyName.text = internship.companyName
-            holder.itemView.tag = internship
-        } else {
-            Toast.makeText(
-                this.fragment.context,
-                "No internships available yet",
-                Toast.LENGTH_SHORT
-            ).show()
+
+            holder.internshipTitle.text = student.firstName
+            holder.companyName.text = student.lastName
+            holder.itemView.tag = student
+        }else{
+            Toast.makeText(this.fragment.context,"No internships available yet", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun getItemCount() = internshipsDTO.size
+    override fun getItemCount() = students.size
 
     // recycler format
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val layout: ConstraintLayout = view.findViewById(R.id.leaderLayout)
-        val companyName: TextView = view.companyName
-        val internshipTitle: TextView = view.internshipTitle
-        init{
+        val layout: ConstraintLayout = view.findViewById(R.id.studentsLayout)
+        val companyName: TextView = view.firstName
+        val internshipTitle: TextView = view.lastName
+        init {
             layout.setOnClickListener{
-                onItemClick?.invoke(internshipsDTO[adapterPosition])
+                onItemClick?.invoke(students[adapterPosition])
             }
         }
     }

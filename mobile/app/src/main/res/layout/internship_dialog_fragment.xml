@@ -115,6 +115,26 @@
                 android:layout_marginBottom="15dp"
                 android:text="Save internship" />
 
+            <Button
+                android:id="@+id/applyToInternshipBtn"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="Apply" />
+            <Button
+                android:id="@+id/closeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="Close" />
         </LinearLayout>
 
     </ScrollView>

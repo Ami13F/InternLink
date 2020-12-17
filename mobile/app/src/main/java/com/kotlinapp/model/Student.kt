@@ -12,7 +12,7 @@ data class Student (
     @ColumnInfo(name="lastName")
     var lastName : String,
 
-    @ColumnInfo(name="lastName")
+    @ColumnInfo(name="description")
     var description : String,
 
     @TypeConverters(AvatarConverter::class)

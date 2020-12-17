@@ -5,6 +5,8 @@ import androidx.room.Entity
 
 @Entity(tableName = "Internship")
 class Internship(
+    @ColumnInfo(name = "id")
+    var id : Long?,
     @ColumnInfo(name = "companyId")
     var companyId: String,
     @ColumnInfo(name = "title")

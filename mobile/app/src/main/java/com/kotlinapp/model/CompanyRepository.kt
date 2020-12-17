@@ -27,7 +27,7 @@ class CompanyRepository (private val itemDao: ItemDao){
 
             for (item in items) {
                 val company = InternApi.service.getCompany(item.companyId)
-                internships = internships.plus(InternshipDTO(company.name, item.title))
+                internships = internships.plus(InternshipDTO(item.id!!, company.name, item.title))
             }
             Result.Success(internships)
         } catch(e: Exception) {
@@ -35,14 +35,15 @@ class CompanyRepository (private val itemDao: ItemDao){
         }
     }
 
-//    suspend fun updateUser(item: User): Result<User> {
-//        return try {
-//            val updatedItem = authService.updateUser(item.id!!)
-//            Result.Success(updatedItem)
-//        }catch(e: Exception){
-//            Result.Error(e)
-//        }
-//    }
+    suspend fun saveJobApplication(application: JobApplication) : Result<Boolean>{
+        return try {
+            InternApi.service.saveJobApplication(application.internshipId, application)
+
+            Result.Success(true)
+        }catch(e: Exception){
+            Result.Error(e)
+        }
+    }
 
     suspend fun changePassword(oldPass: String, newPasss: String): Result<Boolean> {
         return try {
@@ -57,14 +58,4 @@ class CompanyRepository (private val itemDao: ItemDao){
         }
     }
 
-//    suspend fun updateStudent(item: Student): Result<Student> {
-//        return try {
-//            val updatedItem = InternApi.service.update(item)
-//            Result.Success(updatedItem)
-//        }catch(e: Exception){
-//            Result.Error(e)
-//        }finally {
-//            itemDao.update(item)
-//        }
-//    }
 }

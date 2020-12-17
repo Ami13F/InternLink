@@ -77,7 +77,8 @@ class StudentFragment : Fragment() {
         Log.d(TAG, "Setting initial values...")
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
 
-        countryEdit.setCountryForNameCode(student!!.country.split("-")[1])
+        //TODO: uncomment
+//        countryEdit.setCountryForNameCode(AppPreferences.getCurrentStudentUser().country.split("-")[1])
 
         setupPasswordState()
         countrySpinner()
