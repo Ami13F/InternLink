@@ -1,5 +1,5 @@
 import {authenticate} from '@loopback/authentication';
-import {Filter, repository} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
 import {JobApplication, Student} from '../models';
 import {StudentRepository} from '../repositories';
