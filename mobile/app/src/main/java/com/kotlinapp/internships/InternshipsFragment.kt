@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -39,10 +40,10 @@ class InternshipsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.v(TAG, "onActivityCreated Leaderboard...")
+
         if (AppPreferences.role == UserRole.STUDENT.toString())
             setupInternshipList()
-        else if(AppPreferences.role == UserRole.COMPANY.toString())
+        else if (AppPreferences.role == UserRole.COMPANY.toString())
             setupStudentsList()
     }
 
@@ -59,7 +60,7 @@ class InternshipsFragment : Fragment() {
 
         itemsModel.internship.observe(viewLifecycleOwner, Observer { internship ->
             Log.v(TAG, "update items")
-            if(internship != null)
+            if (internship != null)
                 showInternshipsDialog(internship)
         })
 
@@ -87,9 +88,9 @@ class InternshipsFragment : Fragment() {
     }
 
     private lateinit var alertDialog: AlertDialog
-    private fun showInternshipsDialog(internship : Internship) {
+    private fun showInternshipsDialog(internship: Internship) {
         val inflater: LayoutInflater = this.layoutInflater
-        val dialogView: View = inflater.inflate(R.layout.internship_dialog_fragment, null)
+        val dialogView: View = inflater.inflate(R.layout.internship_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.titleField).setText(internship.title)
         dialogView.findViewById<EditText>(R.id.locationField).setText(internship.location)
@@ -103,11 +104,18 @@ class InternshipsFragment : Fragment() {
         saveInternshipBtn.isVisible = false
 
         applyToInternshipBtn.setOnClickListener {
-            itemsModel.saveJobApplication(JobApplication(null, ApplicationStatus.PENDING, AppPreferences.currentUserId, internship.id!!))
+            Log.d(TAG, "save job application ${internship.id} ${ApplicationStatus.PENDING}")
+            itemsModel.saveJobApplication(
+                JobApplication(
+                    status = ApplicationStatus.PENDING.toString(),
+                    studentId = AppPreferences.currentUserId,
+                    internshipId = internship.id!!
+                )
+            )
             alertDialog.hide()
         }
 
-        closeBtn.setOnClickListener{
+        closeBtn.setOnClickListener {
             alertDialog.hide()
         }
 
@@ -119,8 +127,7 @@ class InternshipsFragment : Fragment() {
         alertDialog.show()
     }
 
-    private fun setupStudentsList(){
-     //TODO: add students adapter
+    private fun setupStudentsList() {
         studentListAdapter = StudentsListAdapter(this)
         item_list.adapter = studentListAdapter
 
@@ -129,33 +136,59 @@ class InternshipsFragment : Fragment() {
         }
 
         itemsModel = ViewModelProvider(this).get(InternshipViewModel::class.java)
-//        itemsModel.getInternships()
-//
-//        itemsModel.internships.observe(viewLifecycleOwner, Observer { items ->
-//            Log.v(TAG, "update items")
-//            itemListAdapter.internshipsDTO = items
-//        })
-//
-//        itemsModel.loading.observe(viewLifecycleOwner, Observer { loading ->
-//            Log.v(TAG, "update loading")
-//            progress.visibility = if (loading) View.VISIBLE else View.GONE
-//        })
-//
-//        itemsModel.loadingError.observe(viewLifecycleOwner, Observer { exception ->
-//            if (exception != null) {
-//                Log.v(TAG, "update loading error")
-//                val message = "Loading exception ${exception.message}"
-//                val parentActivity = activity?.parent
-//
-//                if (parentActivity != null) {
-//                    Toast.makeText(parentActivity, message, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
+        itemsModel.getJobApplications()
+
+        itemsModel.applications.observe(viewLifecycleOwner, Observer { items ->
+            Log.v(TAG, "applications received")
+            studentListAdapter.applicationsDto = items
+        })
     }
 
     private lateinit var applicationAlertDialog: AlertDialog
-    private fun showStudentDialog(student: Student){
-        //TODO: show internship and student details
+    private fun showStudentDialog(applicationDTO: ApplicationDTO) {
+        val inflater: LayoutInflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.application_dialog, null)
+
+        dialogView.findViewById<TextView>(R.id.titleField).text = applicationDTO.title
+        dialogView.findViewById<TextView>(R.id.firstName).text = applicationDTO.firstName
+        dialogView.findViewById<TextView>(R.id.lastName).text = applicationDTO.lastName
+        dialogView.findViewById<TextView>(R.id.description).text = applicationDTO.description
+
+        val declineBtn: Button = dialogView.findViewById(R.id.declineBtn)
+        val closeBtn: Button = dialogView.findViewById(R.id.closeBtn)
+        val acceptBtn: Button = dialogView.findViewById(R.id.acceptBtn)
+
+        acceptBtn.setOnClickListener {
+            itemsModel.saveJobApplication(
+                JobApplication(
+                    status = ApplicationStatus.ACCEPTED.toString(),
+                    studentId = applicationDTO.studentId,
+                    internshipId = applicationDTO.internshipId
+                )
+            )
+            applicationAlertDialog.hide()
+        }
+
+        declineBtn.setOnClickListener {
+            itemsModel.saveJobApplication(
+                JobApplication(
+                    status = ApplicationStatus.DECLINED.toString(),
+                    studentId = applicationDTO.studentId,
+                    internshipId = applicationDTO.internshipId
+                )
+            )
+            applicationAlertDialog.hide()
+        }
+
+        closeBtn.setOnClickListener {
+            applicationAlertDialog.hide()
+        }
+
+        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this.context)
+        dialogBuilder.setOnDismissListener { }
+        dialogBuilder.setView(dialogView)
+
+        applicationAlertDialog = dialogBuilder.create()
+        applicationAlertDialog.show()
     }
 }

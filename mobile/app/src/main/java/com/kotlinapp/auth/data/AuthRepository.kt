@@ -28,7 +28,7 @@ object AuthRepository {
 
     private suspend fun setLoggedInUser(user: User, response: UserResponse) {
         Log.d(TAG, "User...$user")
-        var id = response.id
+        val id = response.id
         Api.tokenInterceptor.token = response.token
         if(response.role == UserRole.STUDENT){
             val student = AuthApi.getStudent(id)

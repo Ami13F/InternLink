@@ -61,8 +61,9 @@ class InternshipDTOListAdapter(
         val layout: ConstraintLayout = view.findViewById(R.id.leaderLayout)
         val companyName: TextView = view.companyName
         val internshipTitle: TextView = view.internshipTitle
-        init{
-            layout.setOnClickListener{
+
+        init {
+            layout.setOnClickListener {
                 onItemClick?.invoke(internshipsDTO[adapterPosition])
             }
         }

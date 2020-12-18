@@ -6,6 +6,7 @@ import com.kotlinapp.auth.data.User
 import com.kotlinapp.core.Api
 import com.kotlinapp.utils.Result
 import com.kotlinapp.auth.data.UserResponse
+import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.Company
 import com.kotlinapp.model.Student
 import com.kotlinapp.utils.TAG
@@ -31,10 +32,6 @@ object AuthApi {
         suspend fun getCompany(@Path("id") id: String): Company
 
         @Headers("Content-Type: application/json")
-        @GET("users/")
-        fun getAllUsers(): Call<List<User>>
-
-        @Headers("Content-Type: application/json")
         @POST("company/sign-up")
         suspend fun createUserAccount(@Body user: User): UserResponse
 
@@ -51,8 +48,8 @@ object AuthApi {
         suspend fun createStudentAccount(@Path("id") id: String, @Body student: Student): Student
 
         @Headers("Content-Type: application/json")
-        @PUT("users/{id}")
-        suspend fun updateUser(@Path("id") userID: Int): User
+        @PATCH("users/{id}/student")
+        suspend fun updateStudent(@Path("id") id: String, student: Student): Student
 
         @Headers("Content-Type: application/json")
         @POST("users/change-password")
@@ -63,6 +60,7 @@ object AuthApi {
         suspend fun findOne(@Query("filter") email: String): User
 
     }
+
      val authService:AuthService = Api.retrofit.create(AuthService::class.java)
 
     suspend fun login(user: User): Result<UserResponse> {
@@ -76,6 +74,10 @@ object AuthApi {
     suspend fun getStudent(id: String) = authService.getStudent(id)
 
     suspend fun getCompany(id: String) = authService.getCompany(id)
+
+    suspend fun updateStudent(student: Student) = authService.updateStudent(AppPreferences.currentUserId, student)
+
+//    suspend fun updateCompany(company: Company) = authService.updateCompany(AppPreferences.currentUserId, company)
 
     suspend fun createCompanyAccount(user: User, company: Company): Result<Company> {
         return try{

@@ -21,8 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kotlinapp.R
 import com.kotlinapp.auth.data.AuthRepository
-import com.kotlinapp.auth.data.UserRole
-import com.kotlinapp.auth.login.afterTextChanged
+
 import com.kotlinapp.core.Api
 import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.AvatarHolder
@@ -58,7 +57,6 @@ class StudentFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         student = AppPreferences.getCurrentStudentUser()
-//        requireActivity().intent.putExtra("Score", 0)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -74,13 +72,12 @@ class StudentFragment : Fragment() {
             findNavController().navigate(R.id.login_fragment)
         }
         setupViewModel()
-        Log.d(TAG, "Setting initial values...")
+
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
 
         //TODO: uncomment
 //        countryEdit.setCountryForNameCode(AppPreferences.getCurrentStudentUser().country.split("-")[1])
 
-        setupPasswordState()
         countrySpinner()
 
         avatarEdit.setOnClickListener{
@@ -88,55 +85,11 @@ class StudentFragment : Fragment() {
             avatarChooser()
         }
 
-        saveEditBtn.setOnClickListener {
-            Log.v(TAG, "Update Password")
-            viewModel.changePassword(
-                oldPass = oldPassword.text.toString(),
-                newPass = newPassword1.text.toString()
-            )
-        }
-
-    }
-
-    private fun setupPasswordState(){
-        viewModel.passwordState.observe(viewLifecycleOwner, Observer { passState ->
-            saveEditBtn.isEnabled = passState.isValid
-            if (passState.oldPasswordError != null) {
-                oldPassword.error = getString(passState.oldPasswordError!!)
-            }
-            if (passState.newPassword1Error != null) {
-                newPassword1.error = getString(passState.newPassword1Error!!)
-            }
-            if (passState.newPassword2Error != null) {
-                newPassword2.error = getString(passState.newPassword2Error!!)
-            }
-        })
-
-        oldPassword.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
-        newPassword1.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
-        newPassword2.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
     }
 
     private fun setupViewModel() {
-//        val score = company!!.score
-        val username = AppPreferences.email
-//        scoreTotal.text = "Your score: $score"
-        usernameText.text = "Hello, $username"
+        val email = AppPreferences.email
+        usernameText.text = "Hello, $email"
 
         viewModel.studentUpdate.observe(viewLifecycleOwner, Observer { student ->
             avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
@@ -175,9 +128,7 @@ class StudentFragment : Fragment() {
         countryEdit.setOnCountryChangeListener{
             country = countryEdit.selectedCountryName + "-" + countryEdit.selectedCountryNameCode
             Log.d(TAG, "Selected country... $country")
-//            company!!.country = country
-//            TODO: uncomment this
-//            viewModel.updateProfile(student!!)
+            viewModel.updateStudent(student!!)
             AppPreferences.setCurrentUser(student!!)
         }
     }
@@ -188,7 +139,7 @@ class StudentFragment : Fragment() {
         avatar.data = ImageUtils.bitmapToArray((avatarEdit.drawable as BitmapDrawable).bitmap)
         student!!.avatar = avatar
         //TODO: uncomment
-//        viewModel.updateProfile(student!!)
+        viewModel.updateStudent(student!!)
         AppPreferences.setCurrentUser(student!!)
     }
 

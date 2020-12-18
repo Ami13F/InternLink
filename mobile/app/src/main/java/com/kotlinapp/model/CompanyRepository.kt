@@ -1,46 +1,56 @@
 package com.kotlinapp.model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.kotlinapp.auth.AuthApi
 import com.kotlinapp.auth.AuthApi.authService
-import com.kotlinapp.auth.data.User
-import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.core.InternApi
-import com.kotlinapp.utils.Result
 import com.kotlinapp.core.persistence.ItemDao
+import com.kotlinapp.utils.Result
 import com.kotlinapp.utils.TAG
 
-class CompanyRepository (private val itemDao: ItemDao){
+class CompanyRepository(itemDao: ItemDao) {
 
-    var internships : List<InternshipDTO> = emptyList()
+    var internships: List<InternshipDTO> = emptyList()
+    var applications: List<ApplicationDTO> = emptyList()
+
     var users = itemDao.getAllUsers()
 
     suspend fun saveInternship(internship: Internship) = InternApi.saveInternship(internship)
 
     suspend fun getInternships(): Result<List<InternshipDTO>> {
         return try {
-            Log.d(TAG,"Refreshing...")
             val items = InternApi.service.getInternships()
-            Log.d(TAG,"Internships from server: ${items.size}")
+            Log.d(TAG, "Internships from server: ${items.size}")
 
-
+            internships = emptyList()
             for (item in items) {
                 val company = InternApi.service.getCompany(item.companyId)
                 internships = internships.plus(InternshipDTO(item.id!!, company.name, item.title))
             }
             Result.Success(internships)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Result.Error(e)
         }
     }
 
-    suspend fun saveJobApplication(application: JobApplication) : Result<Boolean>{
+    suspend fun getJobApplications(): Result<List<ApplicationDTO>> {
         return try {
-            InternApi.service.saveJobApplication(application.internshipId, application)
+            val jobApps = InternApi.service.getJobApplications()
+            Log.d(TAG, "Applications from server: ${jobApps.size}")
 
-            Result.Success(true)
-        }catch(e: Exception){
+            applications = emptyList()
+            for (item in jobApps) {
+                val internship = InternApi.service.getInternship(item.internshipId)
+                val student = InternApi.service.getStudent(item.studentId)
+                applications = applications.plus(
+                    ApplicationDTO(
+                        internship.title, student.firstName, student.lastName, item.status,
+                        student.description, item.studentId, item.internshipId
+                    )
+                )
+            }
+            Result.Success(applications)
+        } catch (e: Exception) {
             Result.Error(e)
         }
     }
@@ -53,9 +63,17 @@ class CompanyRepository (private val itemDao: ItemDao){
                 return Result.Error(null)
             }
             Result.Success(true)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             Result.Error(e)
         }
     }
 
+    suspend fun updateStudent(student: Student): Result<Student> {
+        return try {
+            val studentUpdated = AuthApi.updateStudent(student)
+            Result.Success(studentUpdated)
+        }catch(e: Exception){
+            Result.Error(e)
+        }
+    }
 }

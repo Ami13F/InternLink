@@ -80,17 +80,8 @@ class CompanyFragment : Fragment() {
         Log.d(TAG, "Setting initial values...")
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
 
-        setupPasswordState()
         addInternshipBtn.setOnClickListener {
             showCustomDialog()
-        }
-
-        saveEditBtn.setOnClickListener {
-            Log.v(TAG, "Update Password")
-            viewModel.changePassword(
-                oldPass = oldPassword.text.toString(),
-                newPass = newPassword1.text.toString()
-            )
         }
 
     }
@@ -98,7 +89,7 @@ class CompanyFragment : Fragment() {
     private lateinit var alertDialog: AlertDialog
     private fun showCustomDialog() {
         val inflater: LayoutInflater = this.layoutInflater
-        val dialogView: View = inflater.inflate(R.layout.internship_dialog_fragment, null)
+        val dialogView: View = inflater.inflate(R.layout.internship_dialog, null)
 
         val title = dialogView.findViewById<EditText>(R.id.titleField).text
         val location = dialogView.findViewById<EditText>(R.id.locationField).text
@@ -127,40 +118,6 @@ class CompanyFragment : Fragment() {
 
         alertDialog = dialogBuilder.create();
         alertDialog.show()
-    }
-
-    private fun setupPasswordState(){
-        viewModel.passwordState.observe(viewLifecycleOwner, Observer { passState ->
-            saveEditBtn.isEnabled = passState.isValid
-            if (passState.oldPasswordError != null) {
-                oldPassword.error = getString(passState.oldPasswordError!!)
-            }
-            if (passState.newPassword1Error != null) {
-                newPassword1.error = getString(passState.newPassword1Error!!)
-            }
-            if (passState.newPassword2Error != null) {
-                newPassword2.error = getString(passState.newPassword2Error!!)
-            }
-        })
-
-        oldPassword.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
-        newPassword1.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
-        newPassword2.afterTextChanged { viewModel.validatePasswords(
-            oldPassword.text.toString(),
-            newPassword1.text.toString(),
-            newPassword2.text.toString()
-        )
-        }
     }
 
     private fun setupViewModel() {
@@ -221,8 +178,7 @@ class CompanyFragment : Fragment() {
                 onCaptureImageResult(data!!)
             setAvatar()
         }
-    }
-
+    }//yes, you right
 
     private fun avatarChooser() {
         val types = arrayOf<CharSequence>(
