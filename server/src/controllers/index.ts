@@ -6,3 +6,4 @@ export * from './internship-application.controller';
 export * from './student-application.controller';
 export * from './company.controller';
 export * from './application.controller';
+export * from './student.controller';
