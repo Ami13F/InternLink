@@ -5,3 +5,4 @@ export * from './company-internship.controller';
 export * from './internship-application.controller';
 export * from './student-application.controller';
 export * from './company.controller';
+export * from './application.controller';
