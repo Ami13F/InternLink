@@ -1,8 +1,10 @@
+import {authenticate} from '@loopback/authentication';
 import {Filter, repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
 import {JobApplication} from '../models';
 import {JobApplicationRepository} from '../repositories';
 
+@authenticate('jwt')
 export class JobApplicationController {
   constructor(
     @repository(JobApplicationRepository)

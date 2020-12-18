@@ -1,8 +1,10 @@
+import {authenticate} from '@loopback/authentication';
 import {Filter, repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
 import {Internship} from '../models';
 import {InternshipRepository} from '../repositories';
 
+@authenticate('jwt')
 export class InternshipController {
   constructor(
     @repository(InternshipRepository)

@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -15,16 +17,20 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  Company,
-  Internship,
-} from '../models';
+import {basicAuthorization} from '../middlewares/auth.middle';
+import {Company, Internship, UserType} from '../models';
 import {CompanyRepository} from '../repositories';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [UserType.Company],
+  voters: [basicAuthorization],
+})
 export class CompanyInternshipController {
   constructor(
-    @repository(CompanyRepository) protected companyRepository: CompanyRepository,
-  ) { }
+    @repository(CompanyRepository)
+    protected companyRepository: CompanyRepository,
+  ) {}
 
   @get('/companies/{id}/internships', {
     responses: {
@@ -61,11 +67,12 @@ export class CompanyInternshipController {
           schema: getModelSchemaRef(Internship, {
             title: 'NewInternshipInCompany',
             exclude: ['id'],
-            optional: ['companyId']
+            optional: ['companyId'],
           }),
         },
       },
-    }) internship: Omit<Internship, 'id'>,
+    })
+    internship: Omit<Internship, 'id'>,
   ): Promise<Internship> {
     return this.companyRepository.internships(id).create(internship);
   }
@@ -88,7 +95,8 @@ export class CompanyInternshipController {
       },
     })
     internship: Partial<Internship>,
-    @param.query.object('where', getWhereSchemaFor(Internship)) where?: Where<Internship>,
+    @param.query.object('where', getWhereSchemaFor(Internship))
+    where?: Where<Internship>,
   ): Promise<Count> {
     return this.companyRepository.internships(id).patch(internship, where);
   }
@@ -103,7 +111,8 @@ export class CompanyInternshipController {
   })
   async delete(
     @param.path.string('id') id: string,
-    @param.query.object('where', getWhereSchemaFor(Internship)) where?: Where<Internship>,
+    @param.query.object('where', getWhereSchemaFor(Internship))
+    where?: Where<Internship>,
   ): Promise<Count> {
     return this.companyRepository.internships(id).delete(where);
   }

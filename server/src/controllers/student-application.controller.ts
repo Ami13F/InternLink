@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -15,9 +17,15 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {JobApplication, Student} from '../models';
+import {basicAuthorization} from '../middlewares/auth.middle';
+import {JobApplication, Student, UserType} from '../models';
 import {StudentRepository} from '../repositories';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [UserType.Student],
+  voters: [basicAuthorization],
+})
 export class StudentApplicationController {
   constructor(
     @repository(StudentRepository)
