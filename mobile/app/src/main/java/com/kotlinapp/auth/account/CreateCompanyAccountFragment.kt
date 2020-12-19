@@ -94,7 +94,6 @@ class CreateCompanyAccountFragment: AbstractAccountFragment() {
         })
 
         viewModel.validFormState.observe(viewLifecycleOwner, Observer { validState->
-            //TODO: uncomment
             saveCompanyAccountBtn.isEnabled = validState.isDataValid
 
             if(validState.emailError != null){

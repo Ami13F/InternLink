@@ -43,7 +43,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun updateStudent(student: Student) {
         viewModelScope.launch {
-            Log.v(TAG, "Update Profile...")
+            Log.v(TAG, "Update Student Profile...")
             mutableFetching.value = true
             mutableException.value = null
 
@@ -51,6 +51,26 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 is Result.Success -> {
                     Log.d(TAG, "Update succeeded")
                     mutableStudentUpdate.value = student
+                }
+                is Result.Error -> {
+                    Log.w(TAG, "Update failed", result.exception)
+                    mutableException.value = result.exception
+                }
+            }
+            mutableFetching.value = false
+        }
+    }
+
+    fun updateCompany(company: Company) {
+        viewModelScope.launch {
+            Log.v(TAG, "Update Company Profile...")
+            mutableFetching.value = true
+            mutableException.value = null
+
+            when (val result = itemRepository.updateCompany(company)) {
+                is Result.Success -> {
+                    Log.d(TAG, "Update succeeded")
+                    mutableCompanyUpdate.value = company
                 }
                 is Result.Error -> {
                     Log.w(TAG, "Update failed", result.exception)

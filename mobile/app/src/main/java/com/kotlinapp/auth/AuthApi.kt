@@ -52,13 +52,8 @@ object AuthApi {
         suspend fun updateStudent(@Path("id") id: String, student: Student): Student
 
         @Headers("Content-Type: application/json")
-        @POST("users/change-password")
-        suspend fun changePass(@Body pass: PasswordChanger): Response<Unit>
-
-        @Headers("Content-Type: application/json")
-        @GET("users/findOne")
-        suspend fun findOne(@Query("filter") email: String): User
-
+        @PATCH("users/{id}/company")
+        suspend fun updateCompany(@Path("id") id: String, company: Company): Company
     }
 
      val authService:AuthService = Api.retrofit.create(AuthService::class.java)
@@ -77,7 +72,7 @@ object AuthApi {
 
     suspend fun updateStudent(student: Student) = authService.updateStudent(AppPreferences.currentUserId, student)
 
-//    suspend fun updateCompany(company: Company) = authService.updateCompany(AppPreferences.currentUserId, company)
+    suspend fun updateCompany(company: Company) = authService.updateCompany(AppPreferences.currentUserId, company)
 
     suspend fun createCompanyAccount(user: User, company: Company): Result<Company> {
         return try{

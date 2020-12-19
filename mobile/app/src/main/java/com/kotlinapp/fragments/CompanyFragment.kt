@@ -3,6 +3,7 @@ package com.kotlinapp.fragments
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -24,7 +26,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kotlinapp.R
 import com.kotlinapp.auth.data.AuthRepository
-import com.kotlinapp.auth.login.afterTextChanged
 import com.kotlinapp.core.Api
 import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.AvatarHolder
@@ -39,7 +40,14 @@ import com.kotlinapp.utils.TAG
 import kotlinx.android.synthetic.main.company_profile_fragment.*
 import kotlinx.android.synthetic.main.create_company_account_fragment.progress
 import java.io.IOException
-
+import java.util.*
+import android.R.style.*
+import android.graphics.Color
+import com.hbb20.CountryCodePicker
+import kotlinx.android.synthetic.main.company_profile_fragment.avatarEdit
+import kotlinx.android.synthetic.main.company_profile_fragment.logoutBtn
+import kotlinx.android.synthetic.main.company_profile_fragment.usernameText
+import kotlinx.android.synthetic.main.student_profile_fragment.*
 
 @SuppressLint("SetTextI18n")
 class CompanyFragment : Fragment() {
@@ -81,30 +89,35 @@ class CompanyFragment : Fragment() {
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(company!!.avatar!!.data))
 
         addInternshipBtn.setOnClickListener {
-            showCustomDialog()
+            showInternshipDialog()
         }
 
     }
 
     private lateinit var alertDialog: AlertDialog
-    private fun showCustomDialog() {
+    private fun showInternshipDialog() {
         val inflater: LayoutInflater = this.layoutInflater
         val dialogView: View = inflater.inflate(R.layout.internship_dialog, null)
 
         val title = dialogView.findViewById<EditText>(R.id.titleField).text
-        val location = dialogView.findViewById<EditText>(R.id.locationField).text
+
+        val location = dialogView.findViewById<CountryCodePicker>(R.id.locationField)
         val description = dialogView.findViewById<EditText>(R.id.descriptionField).text
-        val startDate = dialogView.findViewById<EditText>(R.id.startDateField).text
-        val endDate = dialogView.findViewById<EditText>(R.id.endDateField).text
+        val startDate = dialogView.findViewById<TextView>(R.id.startDateField)
+        val endDate = dialogView.findViewById<TextView>(R.id.endDateField)
         val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
         val closeBtn: Button = dialogView.findViewById(R.id.closeBtn)
         val applyToInternshipBtn: Button = dialogView.findViewById(R.id.applyToInternshipBtn)
 
         applyToInternshipBtn.isVisible = false
 
+        setCountry(location)
+        setDatePicker(startDate)
+        setDatePicker(endDate)
+
         saveInternshipBtn.setOnClickListener {
-            //todo: change
-            viewModel.saveInternship(Internship(null, AppPreferences.currentUserId, title.toString(), isPaid = false , deadline = "2020-12-14T19:49:23.388Z", location = location.toString(),description =  description.toString(),startDate =  "2020-12-14T19:49:23.388Z", endDate = "2020-12-14T19:49:23.388Z"))
+            viewModel.saveInternship(Internship(null, AppPreferences.currentUserId, title.toString(), isPaid = false , deadline = endDate.text.toString(),
+                location = location.selectedCountryName + "-" + location.selectedCountryNameCode, description =  description.toString(), startDate =  startDate.text.toString(), endDate = endDate.text.toString()))
             alertDialog.hide()
         }
 
@@ -120,10 +133,30 @@ class CompanyFragment : Fragment() {
         alertDialog.show()
     }
 
+    private fun setCountry(location: CountryCodePicker){
+        var country: String
+        location.setOnCountryChangeListener{
+            country = location.selectedCountryName + "-" + location.selectedCountryNameCode
+            Log.d(TAG, "Selected country... $country")
+        }
+    }
+
+    private fun setDatePicker(date: TextView){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        date.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(this.requireContext(), ThemeOverlay_Material_Dark, DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                date.text = "$year-$month-${day}T00:00:00.000Z"
+            }, year, month,day)
+            datePickerDialog.show()
+        }
+    }
+
     private fun setupViewModel() {
-//        val score = company!!.score
         val username = AppPreferences.email
-//        scoreTotal.text = "Your score: $score"
         usernameText.text = "Hello, $username"
 
         viewModel.companyUpdate.observe(viewLifecycleOwner, Observer { company ->
@@ -161,11 +194,10 @@ class CompanyFragment : Fragment() {
 
     private fun setAvatar(){
         Log.d(TAG, "Saving avatar")
-        var avatar = AvatarHolder()
+        val avatar = AvatarHolder()
         avatar.data = ImageUtils.bitmapToArray((avatarEdit.drawable as BitmapDrawable).bitmap)
         company!!.avatar = avatar
-        //TODO: uncomment
-//        viewModel.updateProfile(student!!)
+        viewModel.updateCompany(company!!)
         AppPreferences.setCurrentUser(company!!)
     }
 
@@ -178,7 +210,7 @@ class CompanyFragment : Fragment() {
                 onCaptureImageResult(data!!)
             setAvatar()
         }
-    }//yes, you right
+    }
 
     private fun avatarChooser() {
         val types = arrayOf<CharSequence>(

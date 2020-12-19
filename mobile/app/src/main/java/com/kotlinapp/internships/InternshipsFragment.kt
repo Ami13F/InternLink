@@ -14,13 +14,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.hbb20.CountryCodePicker
 import com.kotlinapp.R
 import com.kotlinapp.auth.data.UserRole
 import com.kotlinapp.core.AppPreferences
 import com.kotlinapp.model.*
 import com.kotlinapp.students.StudentsListAdapter
 import com.kotlinapp.utils.TAG
+import kotlinx.android.synthetic.main.create_company_account_fragment.view.*
 import kotlinx.android.synthetic.main.internships_fragment.*
+import kotlinx.android.synthetic.main.internships_fragment.progress
 
 
 class InternshipsFragment : Fragment() {
@@ -93,10 +96,10 @@ class InternshipsFragment : Fragment() {
         val dialogView: View = inflater.inflate(R.layout.internship_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.titleField).setText(internship.title)
-        dialogView.findViewById<EditText>(R.id.locationField).setText(internship.location)
+        dialogView.findViewById<CountryCodePicker>(R.id.locationField).setCountryForNameCode(internship.location.split("-")[1])
         dialogView.findViewById<EditText>(R.id.descriptionField).setText(internship.description)
-        dialogView.findViewById<EditText>(R.id.startDateField).setText(internship.startDate)
-        dialogView.findViewById<EditText>(R.id.endDateField).setText(internship.endDate)
+        dialogView.findViewById<TextView>(R.id.startDateField).text = internship.startDate
+        dialogView.findViewById<TextView>(R.id.endDateField).text = internship.endDate
 
         val saveInternshipBtn: Button = dialogView.findViewById(R.id.saveInternshipBtn)
         val closeBtn: Button = dialogView.findViewById(R.id.closeBtn)

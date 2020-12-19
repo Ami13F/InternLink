@@ -53,23 +53,19 @@ class CompanyRepository(itemDao: ItemDao) {
         }
     }
 
-    suspend fun changePassword(oldPass: String, newPasss: String): Result<Boolean> {
-        return try {
-            val resp = authService.changePass(AuthApi.PasswordChanger(oldPass, newPasss))
-            Log.d(TAG, "Success resp... ${resp.code()}")
-            if (resp.code() >= 400) {
-                return Result.Error(null)
-            }
-            Result.Success(true)
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-    }
-
     suspend fun updateStudent(student: Student): Result<Student> {
         return try {
             val studentUpdated = AuthApi.updateStudent(student)
             Result.Success(studentUpdated)
+        }catch(e: Exception){
+            Result.Error(e)
+        }
+    }
+
+    suspend fun updateCompany(company: Company): Result<Company> {
+        return try {
+            val companyUpdated = AuthApi.updateCompany(company)
+            Result.Success(companyUpdated)
         }catch(e: Exception){
             Result.Error(e)
         }

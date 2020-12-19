@@ -75,8 +75,7 @@ class StudentFragment : Fragment() {
 
         avatarEdit.setImageBitmap(ImageUtils.arrayToBitmap(student!!.avatar!!.data))
 
-        //TODO: uncomment
-//        countryEdit.setCountryForNameCode(AppPreferences.getCurrentStudentUser().country.split("-")[1])
+        countryEdit.setCountryForNameCode(AppPreferences.getCurrentStudentUser().country.split("-")[1])
 
         countrySpinner()
 
@@ -138,7 +137,6 @@ class StudentFragment : Fragment() {
         var avatar = AvatarHolder()
         avatar.data = ImageUtils.bitmapToArray((avatarEdit.drawable as BitmapDrawable).bitmap)
         student!!.avatar = avatar
-        //TODO: uncomment
         viewModel.updateStudent(student!!)
         AppPreferences.setCurrentUser(student!!)
     }
