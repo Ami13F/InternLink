@@ -21,6 +21,7 @@ class InternshipViewModel(application: Application) : AndroidViewModel(applicati
 
     private val mutableApplications =
         MutableLiveData<List<ApplicationDTO>>().apply { value = emptyList() }
+
     private val mutableInternship = MutableLiveData<Internship>().apply { value = null }
 
     val internship: LiveData<Internship> = mutableInternship
@@ -85,6 +86,13 @@ class InternshipViewModel(application: Application) : AndroidViewModel(applicati
     fun saveJobApplication(application: JobApplication) {
         viewModelScope.launch {
             InternApi.saveJobApplication(application)
+        }
+    }
+
+    fun updateJobApplication(application: JobApplication) {
+        viewModelScope.launch {
+            InternApi.updateJobApplication(application)
+            getJobApplications()
         }
     }
 }

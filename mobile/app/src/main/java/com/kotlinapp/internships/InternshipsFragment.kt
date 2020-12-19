@@ -159,7 +159,7 @@ class InternshipsFragment : Fragment() {
         val acceptBtn: Button = dialogView.findViewById(R.id.acceptBtn)
 
         acceptBtn.setOnClickListener {
-            itemsModel.saveJobApplication(
+            itemsModel.updateJobApplication(
                 JobApplication(
                     status = ApplicationStatus.ACCEPTED.toString(),
                     studentId = applicationDTO.studentId,
@@ -170,7 +170,7 @@ class InternshipsFragment : Fragment() {
         }
 
         declineBtn.setOnClickListener {
-            itemsModel.saveJobApplication(
+            itemsModel.updateJobApplication(
                 JobApplication(
                     status = ApplicationStatus.DECLINED.toString(),
                     studentId = applicationDTO.studentId,

@@ -39,6 +39,10 @@ object InternApi {
         suspend fun saveJobApplication(@Path("id") id: Long, @Body application: JobApplication): JobApplication
 
         @Headers("Content-Type: application/json")
+        @PATCH("internships/{id}/applications")
+        suspend fun updateJobApplication(@Path("id") id: Long, @Body application: JobApplication): JobApplication
+
+        @Headers("Content-Type: application/json")
         @GET("applications")
         suspend fun getJobApplications(): List<JobApplication>
     }
@@ -53,5 +57,9 @@ object InternApi {
 
     suspend fun saveJobApplication(application: JobApplication) {
         service.saveJobApplication(application.internshipId, application)
+    }
+
+    suspend fun updateJobApplication(application: JobApplication) {
+        service.updateJobApplication(application.internshipId, application)
     }
 }

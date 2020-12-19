@@ -11,9 +11,6 @@ import com.kotlinapp.utils.TAG
 class CompanyRepository(itemDao: ItemDao) {
 
     var internships: List<InternshipDTO> = emptyList()
-    var applications: List<ApplicationDTO> = emptyList()
-
-    var users = itemDao.getAllUsers()
 
     suspend fun saveInternship(internship: Internship) = InternApi.saveInternship(internship)
 
@@ -38,11 +35,12 @@ class CompanyRepository(itemDao: ItemDao) {
             val jobApps = InternApi.service.getJobApplications()
             Log.d(TAG, "Applications from server: ${jobApps.size}")
 
-            applications = emptyList()
+            val applications : MutableList<ApplicationDTO> = mutableListOf()
+            applications.clear()
             for (item in jobApps) {
                 val internship = InternApi.service.getInternship(item.internshipId)
                 val student = InternApi.service.getStudent(item.studentId)
-                applications = applications.plus(
+                applications.add(
                     ApplicationDTO(
                         internship.title, student.firstName, student.lastName, item.status,
                         student.description, item.studentId, item.internshipId

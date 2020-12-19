@@ -68,11 +68,11 @@ class MainActivity : AppCompatActivity(),
             }
             R.id.student_profile_fragment -> {
                 Log.d(TAG, "Student Profile")
-                findNavController(R.id.nav_host_fragment).navigate(R.id.student_profile_fragment)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.profile_fragment)
             }
             R.id.company_profile_fragment -> {
                 Log.d(TAG, "Company profile")
-                findNavController(R.id.nav_host_fragment).navigate(R.id.company_profile_fragment)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.profile_fragment)
             }
             R.id.profile_fragment -> {
                 Log.d(TAG, "Profile")
